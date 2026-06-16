@@ -1,0 +1,1918 @@
+<!doctype html>
+<html lang="th" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบสารสนเทศ โรงเรียนกุศลวิทยา</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&amp;family=Prompt:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Kanit', 'Prompt', sans-serif; }
+    
+    .school-bg {
+      background: linear-gradient(135deg, #e0f2fe 0%, #bfdbfe 50%, #dbeafe 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .school-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='20' cy='20' r='2' fill='%233b82f6' opacity='0.1'/%3E%3Ccircle cx='80' cy='40' r='3' fill='%231d4ed8' opacity='0.1'/%3E%3Ccircle cx='40' cy='80' r='2' fill='%2360a5fa' opacity='0.15'/%3E%3C/svg%3E");
+      background-size: 100px 100px;
+      pointer-events: none;
+    }
+    
+    .menu-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    
+    .menu-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(59, 130, 246, 0.3);
+    }
+    
+    .info-card {
+      transition: all 0.3s ease;
+    }
+    
+    .info-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    }
+    
+    .btn-login {
+      transition: all 0.3s ease;
+    }
+    
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .cloud {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    .cloud:nth-child(2) {
+      animation-delay: -2s;
+    }
+    
+    .cloud:nth-child(3) {
+      animation-delay: -4s;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) translateX(0px); }
+      50% { transform: translateY(-10px) translateX(5px); }
+    }
+    
+    .school-building {
+      animation: sway 4s ease-in-out infinite;
+    }
+    
+    @keyframes sway {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(0.5deg); }
+    }
+    
+    .news-ticker {
+      animation: ticker 25s linear infinite;
+    }
+    
+    @keyframes ticker {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    
+    .gradient-text {
+      background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #0ea5e9 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .stat-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+    }
+    
+    .cartoon-tree {
+      animation: treeSway 3s ease-in-out infinite;
+    }
+    
+    @keyframes treeSway {
+      0%, 100% { transform: rotate(-1deg); }
+      50% { transform: rotate(1deg); }
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .back-button {
+      transition: all 0.3s ease;
+    }
+
+    .back-button:hover {
+      transform: translateX(-3px);
+    }
+
+    .banner-image {
+      max-height: 300px;
+      object-fit: cover;
+      width: 100%;
+    }
+
+    .side-image {
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: 1rem;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+
+ </head>
+ <body class="h-full bg-slate-50">
+  
+  <!-- Custom Toast Notification System -->
+  <div id="toast-container" class="fixed top-24 right-4 z-[9999] flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- HOME PAGE -->
+  <div id="home-page" class="page active school-bg min-h-full overflow-auto pb-12">
+   <!-- Navigation Bar -->
+   <nav class="fixed top-0 left-0 right-0 z-50 bg-white shadow-lg border-b-4 border-blue-600">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+     <div class="flex items-center gap-3">
+      <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-md">
+       <i data-lucide="school" class="w-6 h-6 text-white"></i>
+      </div>
+      <div class="flex flex-col">
+       <h1 id="nav-school-name" class="text-base sm:text-lg font-bold text-blue-800 leading-tight">กุศลวิทยา</h1>
+       <span id="storage-badge" class="text-[10px] text-gray-500 font-medium">กำลังโหลดแหล่งเก็บข้อมูล...</span>
+      </div>
+     </div>
+     <div class="flex items-center gap-2">
+      <div id="admin-profile" class="hidden flex items-center gap-2">
+       <i data-lucide="shield" class="w-5 h-5 text-purple-600"></i><span class="text-purple-700 font-medium text-xs sm:text-sm">แอดมิน</span> 
+       <button onclick="navigateTo('admin-edit-page')" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1.5 rounded-full font-medium shadow-lg flex items-center gap-1 text-xs transition"> 
+         <i data-lucide="edit" class="w-4 h-4"></i> 
+         <span class="hidden sm:inline">แก้ไขข้อมูล</span> 
+       </button> 
+       <button onclick="handleAdminLogout()" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-full font-medium shadow-lg flex items-center gap-1 text-xs transition"> 
+         <i data-lucide="log-out" class="w-4 h-4"></i> 
+         <span class="hidden sm:inline">ออกจากระบบ</span> 
+       </button>
+      </div>
+      <div id="login-buttons" class="flex gap-2">
+       <button onclick="navigateTo('admin-login-page')" class="btn-login bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-3.5 py-1.5 rounded-full font-medium shadow-lg flex items-center gap-1 text-xs hover:shadow-xl"> 
+         <i data-lucide="shield" class="w-4 h-4"></i> 
+         <span>เข้าสู่ระบบแอดมิน</span> 
+       </button>
+      </div>
+     </div>
+    </div>
+   </nav>
+
+   <!-- Decorative Elements -->
+   <div class="fixed top-20 left-10 opacity-60 cloud pointer-events-none">
+    <svg width="80" height="50" viewbox="0 0 80 50"><ellipse cx="40" cy="30" rx="35" ry="18" fill="white" /> <ellipse cx="25" cy="25" rx="20" ry="15" fill="white" /> <ellipse cx="55" cy="28" rx="18" ry="12" fill="white" />
+    </svg>
+   </div>
+   <div class="fixed top-32 right-20 opacity-50 cloud pointer-events-none">
+    <svg width="60" height="40" viewbox="0 0 60 40"><ellipse cx="30" cy="22" rx="25" ry="14" fill="white" /> <ellipse cx="18" cy="20" rx="15" ry="10" fill="white" /> <ellipse cx="42" cy="22" rx="14" ry="10" fill="white" />
+    </svg>
+   </div>
+   <div class="fixed top-16 right-40 opacity-40 cloud pointer-events-none">
+    <svg width="50" height="35" viewbox="0 0 50 35"><ellipse cx="25" cy="20" rx="20" ry="12" fill="white" /> <ellipse cx="15" cy="18" rx="12" ry="8" fill="white" /> <ellipse cx="35" cy="19" rx="12" ry="8" fill="white" />
+    </svg>
+   </div>
+
+   <!-- Main Container -->
+   <div class="relative z-10 max-w-7xl mx-auto px-4 py-6 mt-16">
+    <!-- Header -->
+    <header class="relative mb-8">
+     <!-- School Title and Logo -->
+     <div class="text-center py-6">
+      <div class="inline-block relative">
+       <!-- School Logo/Icon -->
+       <div class="mb-4 flex justify-center">
+        <div class="relative">
+         <div id="school-icon-circle" class="w-24 h-24 rounded-full flex items-center justify-center shadow-xl overflow-hidden" style="background: linear-gradient(135deg, #3b82f6 50%, #6366f1 50%)">
+          <img id="school-icon-img" src="" alt="โลโก้โรงเรียน" class="w-full h-full object-cover hidden">
+          <svg id="school-icon-default" viewBox="0 0 64 64" class="w-14 h-14"><path d="M32 8 L8 24 L8 56 L56 56 L56 24 Z" fill="#ffffff" stroke="#1e40af" stroke-width="2" /> <rect x="26" y="36" width="12" height="20" fill="#3b82f6" /> <rect x="14" y="28" width="8" height="10" fill="#60a5fa" rx="1" /> <rect x="42" y="28" width="8" height="10" fill="#60a5fa" rx="1" /> <polygon points="32,4 12,22 52,22" fill="#ef4444" /> <circle cx="32" cy="16" r="3" fill="#fbbf24" />
+          </svg>
+         </div>
+         <div class="absolute -top-1 -right-1 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center shadow-md animate-bounce"><span class="text-xs">🎓</span>
+         </div>
+        </div>
+       </div>
+       <h1 id="school-title" class="text-2xl md:text-4xl lg:text-5xl font-bold gradient-text drop-shadow-sm">ระบบสารสนเทศ โรงเรียนกุศลวิทยา</h1>
+       <p id="school-motto" class="mt-3 text-blue-700 font-medium text-base sm:text-lg">"วิชาการเด่น เน้นคุณธรรม นำสู่ความสำเร็จ"</p>
+      </div>
+     </div><!-- News Ticker -->
+     <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full py-2.5 px-4 overflow-hidden shadow-lg">
+      <div class="flex items-center"><span class="bg-yellow-400 text-blue-900 px-3 py-1 rounded-full text-xs font-bold mr-4 flex-shrink-0">📢 ข่าวด่วน</span>
+       <div class="overflow-hidden flex-1">
+        <p id="news-ticker-text" class="news-ticker text-white whitespace-nowrap text-sm">🎉 ยินดีต้อนรับสู่ระบบสารสนเทศโรงเรียนกุศลวิทยา ประจำปีการศึกษา 2569 | 📚 เปิดรับสมัครนักเรียนใหม่ปีการศึกษา 2569 แล้ววันนี้ | 🏆 ขอแสดงความยินดีกับนักเรียนที่ได้รับรางวัลการแข่งขันวิชาการ | 📅 กำหนดการสอบกลางภาค 1/2569 วันที่ 3-7 สิงหาคม 2569</p>
+       </div>
+      </div>
+     </div>
+    </header>
+
+    <!-- Banner Image Section -->
+    <section class="mb-10">
+     <img id="banner-image" src="" alt="โรงเรียน" class="banner-image shadow-lg rounded-2xl" style="display:none;" onerror="this.onerror=null; this.style.display='none'; document.getElementById('banner-placeholder').style.display='flex';">
+     <div id="banner-placeholder" class="banner-image shadow-lg" style="display:flex; background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #0ea5e9 100%); min-height:200px; align-items:center; justify-content:center; border-radius:0.75rem;">
+       <div class="text-center text-white p-4">
+         <div class="text-6xl mb-3">🏫</div>
+         <p class="text-xl font-bold">โรงเรียนกุศลวิทยา</p>
+       </div>
+     </div>
+    </section>
+
+    <!-- Main Menu with Side Images -->
+    <section class="mb-10">
+     <h2 class="text-2xl font-bold text-blue-800 mb-6 flex items-center gap-3"><span class="bg-blue-100 p-2 rounded-lg"> <i data-lucide="layout-grid" class="w-6 h-6 text-blue-600"></i> </span> เมนูหลัก</h2>
+     <div id="menu-buttons-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <!-- Menu buttons will be generated here -->
+     </div>
+    </section>
+
+    <!-- School News & Activities -->
+    <section class="mb-10">
+     <h2 class="text-2xl font-bold text-blue-800 mb-6 flex items-center gap-3"><span class="bg-blue-100 p-2 rounded-lg"> <i data-lucide="newspaper" class="w-6 h-6 text-blue-600"></i> </span> ข่าวสารและกิจกรรม</h2>
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="news-activities-section"><!-- News & activities cards will be generated here -->
+     </div>
+    </section>
+
+    <!-- About School Section -->
+    <section class="mb-10">
+     <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-blue-100">
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 p-6">
+       <h2 class="text-2xl font-bold text-white flex items-center gap-3"><span class="bg-white/20 p-2 rounded-lg"> <i data-lucide="school" class="w-6 h-6"></i> </span> เกี่ยวกับโรงเรียน</h2>
+      </div>
+      <div class="p-6 md:p-8">
+       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8"><!-- School Info -->
+        <div>
+         <h3 class="text-xl font-bold text-blue-800 mb-4 flex items-center gap-2"><span class="text-2xl">🏫</span> ประวัติโรงเรียน</h3>
+         <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-100">
+          <p id="about-history-text" class="text-gray-700 leading-relaxed mb-4">โรงเรียนกุศลวิทยาเป็นสถานศึกษาที่มุ่งเน้นพัฒนาผู้เรียนให้มีความรู้คู่คุณธรรม ส่งเสริมให้นักเรียนมีทักษะการเรียนรู้ในศตวรรษที่ 21 พร้อมรับความเปลี่ยนแปลงของโลก</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-medium">📚 มุ่งเน้นวิชาการ</span> 
+            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-medium">🌱 พัฒนาคุณธรรม</span> 
+            <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-medium">💡 ส่งเสริมความคิดสร้างสรรค์</span>
+          </div>
+         </div><!-- Vision & Mission -->
+         <div class="mt-6 space-y-4">
+          <div class="bg-gradient-to-r from-amber-50 to-yellow-50 rounded-xl p-4 border border-amber-200">
+           <h4 class="font-bold text-amber-800 mb-2 flex items-center gap-2"><span>🎯</span> วิสัยทัศน์</h4>
+           <p id="about-vision-text" class="text-gray-700 text-sm">พัฒนาผู้เรียนให้เป็นคนดี มีความรู้ อยู่ในสังคมอย่างมีความสุข</p>
+          </div>
+          <div class="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-4 border border-emerald-200">
+           <h4 class="font-bold text-emerald-800 mb-2 flex items-center gap-2"><span>🚀</span> พันธกิจ</h4>
+           <p id="about-mission-text" class="text-gray-700 text-sm">จัดการศึกษาที่มีคุณภาพ พัฒนาผู้เรียนให้มีความสามารถทางวิชาการและทักษะชีวิต</p>
+          </div>
+         </div>
+        </div><!-- School Images/Activities -->
+        <div>
+         <h3 class="text-xl font-bold text-blue-800 mb-4 flex items-center gap-2"><span class="text-2xl">📸</span> บรรยากาศโรงเรียน</h3>
+         <div class="grid grid-cols-2 gap-4" id="gallery-grid"><!-- render by JS --></div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+
+    <!-- School Statistics -->
+    <section class="mb-10">
+     <h2 class="text-2xl font-bold text-blue-800 mb-6 flex items-center gap-3"><span class="bg-blue-100 p-2 rounded-lg"> <i data-lucide="bar-chart-3" class="w-6 h-6 text-blue-600"></i> </span> ข้อมูลสรุปโรงเรียน</h2>
+     <div class="grid grid-cols-1 sm:grid-cols-3 gap-6"><!-- นักเรียนทั้งหมด -->
+      <div class="stat-card rounded-2xl p-6 shadow-lg border border-blue-100">
+       <div class="flex items-center gap-4">
+        <div class="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-md"><i data-lucide="users" class="w-7 h-7 text-white"></i>
+        </div>
+        <div>
+         <p class="text-gray-500 text-sm">นักเรียนทั้งหมด</p>
+         <p id="student-count" class="text-3xl font-bold text-blue-600">130</p>
+         <p class="text-gray-400 text-xs">คน</p>
+        </div>
+       </div>
+      </div><!-- บุคลากร -->
+      <div class="stat-card rounded-2xl p-6 shadow-lg border border-blue-100">
+       <div class="flex items-center gap-4">
+        <div class="w-14 h-14 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-xl flex items-center justify-center shadow-md"><i data-lucide="user-check" class="w-7 h-7 text-white"></i>
+        </div>
+        <div>
+         <p class="text-gray-500 text-sm">บุคลากร</p>
+         <p id="staff-count" class="text-3xl font-bold text-emerald-600">14</p>
+         <p class="text-gray-400 text-xs">คน</p>
+        </div>
+       </div>
+      </div><!-- ห้องเรียน -->
+      <div class="stat-card rounded-2xl p-6 shadow-lg border border-blue-100">
+       <div class="flex items-center gap-4">
+        <div class="w-14 h-14 bg-gradient-to-br from-purple-400 to-indigo-600 rounded-xl flex items-center justify-center shadow-md"><i data-lucide="door-open" class="w-7 h-7 text-white"></i>
+        </div>
+        <div>
+         <p class="text-gray-500 text-sm">ห้องเรียน</p>
+         <p class="text-3xl font-bold text-purple-600">12</p>
+         <p class="text-gray-400 text-xs">ห้อง</p>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+
+    <!-- Quick Links -->
+    <section class="mb-10">
+     <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-6 shadow-xl">
+      <h3 class="text-white text-lg font-bold mb-4 flex items-center gap-2"><i data-lucide="link" class="w-5 h-5"></i> ลิงก์ด่วน</h3>
+      <div id="quick-links-container" class="flex flex-wrap gap-3">
+        <!-- Rendered dynamically by JS -->
+      </div>
+     </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white rounded-3xl shadow-xl p-6 border border-blue-100">
+     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div>
+       <h4 class="font-bold text-blue-800 mb-3 flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4"></i> ที่อยู่</h4>
+       <p id="footer-address" class="text-gray-600 text-sm"></p>
+      </div>
+      <div>
+       <h4 class="font-bold text-blue-800 mb-3 flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4"></i> ติดต่อ</h4>
+       <p id="footer-contact" class="text-gray-600 text-sm"></p>
+      </div>
+      <div>
+       <h4 class="font-bold text-blue-800 mb-3 flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4"></i> เวลาทำการ</h4>
+       <p id="footer-working-hours" class="text-gray-600 text-sm">วันจันทร์ - ศุกร์<br>08:00 - 16:30 น.<br>(หยุดวันเสาร์-อาทิตย์และวันหยุดราชการ)</p>
+      </div>
+     </div>
+     <div class="border-t border-blue-100 mt-6 pt-6 text-center">
+      <p id="footer-copyright" class="text-gray-500 text-sm">© 2569 โรงเรียนกุศลวิทยา | ระบบสารสนเทศโรงเรียน</p>
+      <p class="text-gray-400 text-xs mt-1">พัฒนาโดย : ธนวัฒน์ พานทอง สร้างขึ้นเมื่อ 2569</p>
+      <div class="flex justify-center gap-4 mt-3">
+        <a id="footer-facebook-link" href="#facebook" target="_blank" class="text-blue-600 hover:text-blue-800 transition"> <i data-lucide="facebook" class="w-5 h-5"></i> </a> 
+        <a id="footer-line-link" href="#line" target="_blank" class="text-green-600 hover:text-green-800 transition"> <i data-lucide="message-circle" class="w-5 h-5"></i> </a> 
+        <a id="footer-youtube-link" href="#youtube" target="_blank" class="text-red-600 hover:text-red-800 transition"> <i data-lucide="youtube" class="w-5 h-5"></i> </a>
+      </div>
+     </div>
+    </footer>
+   </div>
+
+   <!-- Decorative School Scene -->
+   <div class="fixed bottom-0 left-0 right-0 h-20 pointer-events-none overflow-hidden opacity-30">
+    <svg viewbox="0 0 1200 80" class="w-full h-full" preserveaspectratio="none"><path d="M0 80 L0 40 Q300 20 600 40 Q900 60 1200 40 L1200 80 Z" fill="#22c55e" /> <circle cx="100" cy="50" r="20" fill="#16a34a" /> <circle cx="150" cy="45" r="15" fill="#22c55e" /> <circle cx="1050" cy="48" r="18" fill="#16a34a" /> <circle cx="1100" cy="52" r="14" fill="#22c55e" />
+    </svg>
+   </div>
+  </div>
+
+  <!-- SCHEDULE PAGE -->
+  <div id="schedule-page" class="page school-bg min-h-full overflow-auto">
+   <div class="relative z-10 max-w-7xl mx-auto px-4 py-6 mt-20">
+    <button onclick="navigateTo('home-page')" class="back-button mb-6 bg-blue-600 text-white px-4 py-2 rounded-full font-medium inline-flex items-center gap-2 hover:bg-blue-700"> <i data-lucide="arrow-left" class="w-4 h-4"></i> กลับหน้าหลัก </button>
+    <div class="bg-white rounded-3xl shadow-xl p-8">
+     <h1 class="text-3xl font-bold text-blue-800 mb-6 flex items-center gap-3"><i data-lucide="calendar" class="w-8 h-8"></i> ตารางเรียน</h1>
+     <div class="bg-blue-50 rounded-xl p-6 border border-blue-200">
+      <p class="text-gray-700">ตารางเรียนประจำปีการศึกษา 2569 อยู่ระหว่างกระบวนการจัดสรรเพื่อเตรียมความพร้อมวิชาคอมพิวเตอร์และระบบหุ่นยนต์อัตโนมัติ</p>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <!-- EXAM PAGE -->
+  <div id="exam-page" class="page school-bg min-h-full overflow-auto">
+   <div class="relative z-10 max-w-7xl mx-auto px-4 py-6 mt-20">
+    <button onclick="navigateTo('home-page')" class="back-button mb-6 bg-blue-600 text-white px-4 py-2 rounded-full font-medium inline-flex items-center gap-2 hover:bg-blue-700"> <i data-lucide="arrow-left" class="w-4 h-4"></i> กลับหน้าหลัก </button>
+    <div class="bg-white rounded-3xl shadow-xl p-8">
+     <h1 class="text-3xl font-bold text-blue-800 mb-6 flex items-center gap-3"><i data-lucide="file-text" class="w-8 h-8"></i> ตารางสอบ</h1>
+     <div class="space-y-3">
+      <div class="bg-red-50 border-l-4 border-red-600 rounded-lg p-4">
+       <p class="text-gray-700 font-medium">📋 สอบกลางภาคเรียนที่ 1/2569: 3-7 สิงหาคม 2569</p>
+      </div>
+      <div class="bg-red-50 border-l-4 border-red-600 rounded-lg p-4">
+       <p class="text-gray-700 font-medium">📋 สอบปลายภาคเรียนที่ 1/2569: 5-9 ตุลาคม 2569</p>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <!-- GRADES PAGE -->
+  <div id="grades-page" class="page school-bg min-h-full overflow-auto">
+   <div class="relative z-10 max-w-7xl mx-auto px-4 py-6 mt-20">
+    <button onclick="navigateTo('home-page')" class="back-button mb-6 bg-blue-600 text-white px-4 py-2 rounded-full font-medium inline-flex items-center gap-2 hover:bg-blue-700"> <i data-lucide="arrow-left" class="w-4 h-4"></i> กลับหน้าหลัก </button>
+    <div class="bg-white rounded-3xl shadow-xl p-8">
+     <h1 class="text-3xl font-bold text-blue-800 mb-6 flex items-center gap-3"><i data-lucide="award" class="w-8 h-8"></i> ผลการเรียน</h1>
+     <div class="bg-emerald-50 rounded-xl p-6 border border-emerald-200">
+      <p class="text-gray-700">ผลการเรียนประจำปีการศึกษา 2569 จะประกาศผ่านระบบหลังจากผ่านความเห็นชอบจากคณะกรรมการสถานศึกษาเรียบร้อยแล้ว</p>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <!-- CONTACT PAGE -->
+  <div id="contact-page" class="page school-bg min-h-full overflow-auto">
+   <div class="relative z-10 max-w-7xl mx-auto px-4 py-6 mt-20">
+    <button onclick="navigateTo('home-page')" class="back-button mb-6 bg-blue-600 text-white px-4 py-2 rounded-full font-medium inline-flex items-center gap-2 hover:bg-blue-700"> <i data-lucide="arrow-left" class="w-4 h-4"></i> กลับหน้าหลัก </button>
+    <div class="bg-white rounded-3xl shadow-xl p-8">
+     <h1 class="text-3xl font-bold text-blue-800 mb-6 flex items-center gap-3"><i data-lucide="phone" class="w-8 h-8"></i> ติดต่อโรงเรียน</h1>
+     <div class="space-y-4">
+      <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-200">
+       <h3 class="font-bold text-blue-800 mb-2 flex items-center gap-2"><i data-lucide="map-pin" class="w-5 h-5"></i> ที่อยู่</h3>
+       <p class="text-gray-700" id="contact-address-text"></p>
+      </div>
+      <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
+       <h3 class="font-bold text-green-800 mb-2 flex items-center gap-2"><i data-lucide="phone" class="w-5 h-5"></i> โทรศัพท์ / โทรสาร</h3>
+       <p class="text-gray-700" id="contact-phone-text"></p>
+      </div>
+      <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-200">
+       <h3 class="font-bold text-purple-800 mb-2 flex items-center gap-2"><i data-lucide="mail" class="w-5 h-5"></i> อีเมล</h3>
+       <p class="text-gray-700" id="contact-email-text"></p>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <!-- MAP PAGE -->
+  <div id="map-page" class="page school-bg min-h-full overflow-auto">
+   <div class="relative z-10 max-w-7xl mx-auto px-4 py-6 mt-20">
+    <button onclick="navigateTo('home-page')" class="back-button mb-6 bg-blue-600 text-white px-4 py-2 rounded-full font-medium inline-flex items-center gap-2 hover:bg-blue-700"> <i data-lucide="arrow-left" class="w-4 h-4"></i> กลับหน้าหลัก </button>
+    <div class="bg-white rounded-3xl shadow-xl p-8">
+     <h1 class="text-3xl font-bold text-blue-800 mb-6 flex items-center gap-3"><i data-lucide="map-pin" class="w-8 h-8"></i> แผนที่</h1>
+     <div class="bg-gray-100 rounded-2xl h-[450px] overflow-hidden border border-gray-300 relative shadow-inner">
+       <!-- Google Maps Embed for โรงเรียนกุศลวิทยา บางยาง สมุทรสาคร -->
+       <iframe 
+         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3878.8953931665487!2d100.2312698!3d13.6338167!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e2b96ff76cb41b%3A0xc3c5cbdfcf2ff1be!2z4LmC4Lij4LiH4LmA4Lij4Li14Lii4LiZ4LiB4Li44Liq4Lil4Lix4Li04Lii4Liy!5e0!3m2!1sth!2sth!4v1700000000000!5m2!1sth!2sth" 
+         width="100%" 
+         height="100%" 
+         style="border:0;" 
+         allowfullscreen="" 
+         loading="lazy" 
+         referrerpolicy="no-referrer-when-downgrade">
+       </iframe>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <!-- ADMIN LOGIN PAGE -->
+  <div id="admin-login-page" class="page school-bg min-h-full overflow-auto">
+   <div class="relative z-10 max-w-md mx-auto px-4 py-12">
+    <div class="bg-white rounded-3xl shadow-2xl p-8">
+     <button onclick="navigateTo('home-page')" class="back-button mb-6 w-full bg-gray-100 text-gray-800 px-4 py-2 rounded-full font-medium inline-flex items-center justify-center gap-2 hover:bg-gray-200 transition"> 
+       <i data-lucide="arrow-left" class="w-4 h-4"></i> กลับหน้าหลัก 
+     </button>
+     <div class="text-center mb-8">
+      <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-purple-600 to-indigo-600 rounded-full flex items-center justify-center shadow-lg">
+        <i data-lucide="shield-alert" class="w-8 h-8 text-white"></i>
+      </div>
+      <h1 class="text-2xl font-bold text-purple-800">ล็อกอินแอดมิน</h1>
+      <p class="text-gray-500 text-sm mt-2">โปรดใส่รหัสผ่านเพื่อแก้ไขข้อมูลโรงเรียน</p>
+     </div>
+     <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+      <div>
+        <label for="admin-password" class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่าน</label> 
+        <input type="password" id="admin-password" placeholder="ระบุรหัสผ่านแอดมิน" class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:outline-none focus:border-purple-500 transition" required>
+      </div>
+      <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-bold hover:shadow-lg transition mt-6 flex items-center justify-center gap-2"> 
+        <i data-lucide="log-in" class="w-5 h-5"></i> เข้าสู่ระบบ 
+      </button>
+     </form>
+    </div>
+   </div>
+  </div>
+
+  <!-- ADMIN EDIT PAGE -->
+  <div id="admin-edit-page" class="page school-bg min-h-full overflow-auto pb-12">
+   <div class="relative z-10 max-w-4xl mx-auto px-4 py-8">
+    <button onclick="navigateTo('home-page')" class="back-button mb-6 bg-blue-600 text-white px-4 py-2 rounded-full font-medium inline-flex items-center gap-2 hover:bg-blue-700"> <i data-lucide="arrow-left" class="w-4 h-4"></i> กลับหน้าหลัก </button>
+    <div class="bg-white rounded-3xl shadow-xl p-8">
+     <div class="flex items-center justify-between border-b border-gray-100 pb-4 mb-8">
+       <h1 class="text-2xl sm:text-3xl font-bold text-purple-800 flex items-center gap-3"><i data-lucide="settings" class="w-8 h-8"></i> แก้ไขข้อมูลโรงเรียน</h1>
+       <span class="bg-purple-100 text-purple-800 text-xs font-semibold px-3 py-1 rounded-full" id="admin-storage-indicator">...</span>
+     </div>
+     
+     <form onsubmit="handleAdminUpdate(event)" class="space-y-6">
+      <!-- School Info Section -->
+      <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200">
+       <h2 class="text-lg font-bold text-blue-800 mb-4 flex items-center gap-2"><i data-lucide="school" class="w-5 h-5"></i> ข้อมูลโรงเรียน</h2>
+       <div class="space-y-4">
+        <div>
+         <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อโรงเรียน</label> <input type="text" id="edit-school-name" placeholder="ชื่อโรงเรียน" class="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:outline-none focus:border-blue-500 transition">
+        </div>
+        <div>
+         <label class="block text-sm font-medium text-gray-700 mb-2">คำขวัญโรงเรียน</label> <input type="text" id="edit-school-motto" placeholder="คำขวัญโรงเรียน" class="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:outline-none focus:border-blue-500 transition">
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+         <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">จำนวนนักเรียน</label> <input type="number" id="edit-student-count" placeholder="130" class="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:outline-none focus:border-blue-500 transition">
+         </div>
+         <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">จำนวนบุคลากร</label> <input type="number" id="edit-staff-count" placeholder="14" class="w-full px-4 py-3 border-2 border-blue-200 rounded-xl focus:outline-none focus:border-blue-500 transition">
+         </div>
+        </div>
+       </div>
+      </div><!-- School Icon Section -->
+      <div class="bg-gradient-to-r from-violet-50 to-purple-50 rounded-2xl p-6 border border-violet-200">
+       <h2 class="text-lg font-bold text-violet-800 mb-4 flex items-center gap-2"><i data-lucide="circle-user" class="w-5 h-5"></i> โลโก้/ไอคอนโรงเรียน</h2>
+       <div class="flex flex-col sm:flex-row gap-5">
+        <!-- preview วงกลม S-curve -->
+        <div class="flex-shrink-0 flex flex-col items-center gap-2">
+         <div id="icon-admin-circle" class="w-20 h-20 rounded-full overflow-hidden flex items-center justify-center shadow-lg" style="background: linear-gradient(135deg, #3b82f6 50%, #6366f1 50%)">
+          <img id="icon-preview-img" src="" class="w-full h-full object-cover hidden" onerror="this.classList.add('hidden');document.getElementById('icon-preview-default').classList.remove('hidden')">
+          <span id="icon-preview-default" class="text-3xl">🏫</span>
+         </div>
+         <span class="text-xs text-gray-400">ตัวอย่างโลโก้</span>
+        </div>
+        <div class="flex-1 space-y-3">
+         <!-- สี 2 ช่อง -->
+         <div class="flex gap-3">
+          <div class="flex-1">
+           <label class="block text-xs font-medium text-gray-600 mb-1">🎨 สีที่ 1 (บนซ้าย)</label>
+           <div class="flex gap-2 items-center">
+            <input type="color" id="edit-icon-color1" value="#3b82f6"
+             class="w-10 h-10 rounded-lg border-2 border-violet-200 cursor-pointer p-0.5"
+             oninput="updateAdminIconColors()">
+            <input type="text" id="edit-icon-color1-hex" placeholder="#3b82f6"
+             class="flex-1 px-2 py-2 border border-gray-200 rounded-lg text-xs focus:outline-none focus:border-violet-400"
+             value="#3b82f6" oninput="syncColorHex('icon-color1',this.value)">
+           </div>
+          </div>
+          <div class="flex-1">
+           <label class="block text-xs font-medium text-gray-600 mb-1">🎨 สีที่ 2 (ล่างขวา)</label>
+           <div class="flex gap-2 items-center">
+            <input type="color" id="edit-icon-color2" value="#6366f1"
+             class="w-10 h-10 rounded-lg border-2 border-violet-200 cursor-pointer p-0.5"
+             oninput="updateAdminIconColors()">
+            <input type="text" id="edit-icon-color2-hex" placeholder="#6366f1"
+             class="flex-1 px-2 py-2 border border-gray-200 rounded-lg text-xs focus:outline-none focus:border-violet-400"
+             value="#6366f1" oninput="syncColorHex('icon-color2',this.value)">
+           </div>
+          </div>
+         </div>
+         <!-- สีสำเร็จรูป -->
+         <div>
+          <label class="block text-xs font-medium text-gray-600 mb-2">⚡ สีสำเร็จรูป</label>
+          <div class="flex flex-wrap gap-2">
+           <button type="button" onclick="setIconColors('#3b82f6','#6366f1')" class="w-8 h-8 rounded-full shadow" style="background:linear-gradient(135deg,#3b82f6 50%,#6366f1 50%)" title="น้ำเงิน-ม่วง"></button>
+           <button type="button" onclick="setIconColors('#10b981','#0ea5e9')" class="w-8 h-8 rounded-full shadow" style="background:linear-gradient(135deg,#10b981 50%,#0ea5e9 50%)" title="เขียว-ฟ้า"></button>
+           <button type="button" onclick="setIconColors('#f59e0b','#ef4444')" class="w-8 h-8 rounded-full shadow" style="background:linear-gradient(135deg,#f59e0b 50%,#ef4444 50%)" title="ส้ม-แดง"></button>
+           <button type="button" onclick="setIconColors('#8b5cf6','#ec4899')" class="w-8 h-8 rounded-full shadow" style="background:linear-gradient(135deg,#8b5cf6 50%,#ec4899 50%)" title="ม่วง-ชมพู"></button>
+           <button type="button" onclick="setIconColors('#1e40af','#1e3a5f')" class="w-8 h-8 rounded-full shadow" style="background:linear-gradient(135deg,#1e40af 50%,#1e3a5f 50%)" title="น้ำเงินเข้ม"></button>
+           <button type="button" onclick="setIconColors('#dc2626','#7f1d1d')" class="w-8 h-8 rounded-full shadow" style="background:linear-gradient(135deg,#dc2626 50%,#7f1d1d 50%)" title="แดงเข้ม"></button>
+          </div>
+         </div>
+         <!-- รูปภาพ -->
+         <div>
+          <label class="block text-xs font-medium text-gray-600 mb-1">🖼 รูปภาพโลโก้ (ทับสีพื้นหลัง)</label>
+          <input type="file" accept="image/*"
+           class="w-full text-xs text-gray-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-violet-500 file:text-white hover:file:bg-violet-600 cursor-pointer"
+           onchange="handleIconFileUpload(this)">
+         </div>
+         <div>
+          <input type="url" id="edit-school-icon" placeholder="🔗 หรือวาง URL รูปภาพโลโก้ที่นี่"
+           class="w-full px-3 py-2 border border-gray-200 rounded-lg text-xs focus:outline-none focus:border-violet-400"
+           oninput="updateIconPreview(this.value)">
+         </div>
+        </div>
+       </div>
+      </div><!-- Banner Image Section -->
+      <div class="bg-gradient-to-r from-indigo-50 to-blue-50 rounded-2xl p-6 border border-indigo-200">
+       <h2 class="text-lg font-bold text-indigo-800 mb-4 flex items-center gap-2"><i data-lucide="image" class="w-5 h-5"></i> ภาพหน้าปก</h2>
+       <div class="space-y-3">
+        <!-- Preview -->
+        <div id="banner-preview-box" class="w-full h-36 rounded-xl overflow-hidden border-2 border-indigo-200 bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center">
+         <img id="banner-preview-img" src="" alt="preview" class="w-full h-full object-cover hidden"
+          onerror="this.classList.add('hidden');document.getElementById('banner-preview-placeholder').classList.remove('hidden')">
+         <div id="banner-preview-placeholder" class="text-indigo-300 flex flex-col items-center gap-2">
+          <i data-lucide="image" class="w-10 h-10"></i>
+          <span class="text-xs">ยังไม่มีรูปภาพ</span>
+         </div>
+        </div>
+        <!-- Upload file -->
+        <div>
+         <label class="block text-sm font-medium text-gray-700 mb-1">📁 อัปโหลดภาพจากเครื่องของคุณ</label>
+         <input type="file" id="banner-file-upload" accept="image/*"
+          class="w-full text-sm text-gray-600 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-500 file:text-white file:font-medium hover:file:bg-indigo-600 cursor-pointer"
+          onchange="handleBannerFileUpload(this)">
+         <p class="text-xs text-gray-400 mt-1">รองรับ JPG, PNG, GIF (แนะนำขนาด 1200×300px)</p>
+        </div>
+        <!-- URL input -->
+        <div>
+         <label class="block text-sm font-medium text-gray-700 mb-1">🔗 หรือใส่ URL รูปภาพแทน</label>
+         <input type="url" id="edit-banner-image" placeholder="https://example.com/image.jpg"
+          class="w-full px-4 py-3 border-2 border-indigo-200 rounded-xl focus:outline-none focus:border-indigo-500 transition text-sm"
+          oninput="updateBannerPreview(this.value)">
+        </div>
+       </div>
+      </div><!-- Contact Info Section -->
+      <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 border border-green-200">
+       <h2 class="text-lg font-bold text-green-800 mb-4 flex items-center gap-2"><i data-lucide="phone" class="w-5 h-5"></i> ข้อมูลติดต่อ</h2>
+       <div class="space-y-4">
+        <div>
+         <label class="block text-sm font-medium text-gray-700 mb-2">ที่อยู่โรงเรียน</label> <textarea id="edit-address" placeholder="ที่อยู่โรงเรียน" class="w-full px-4 py-3 border-2 border-green-200 rounded-xl focus:outline-none focus:border-green-500 transition" rows="3"></textarea>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+         <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">โทรศัพท์</label> <input type="text" id="edit-phone" placeholder="034-866-088" class="w-full px-4 py-3 border-2 border-green-200 rounded-xl focus:outline-none focus:border-green-500 transition">
+         </div>
+         <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">โทรสาร</label> <input type="text" id="edit-fax" placeholder="034-866-088" class="w-full px-4 py-3 border-2 border-green-200 rounded-xl focus:outline-none focus:border-green-500 transition">
+         </div>
+         <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">อีเมลติดต่อ</label> <input type="email" id="edit-email" placeholder="kusol@gmail.com" class="w-full px-4 py-3 border-2 border-green-200 rounded-xl focus:outline-none focus:border-green-500 transition">
+         </div>
+        </div>
+       </div>
+      </div><!-- Ticker Section -->
+      <div class="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 border border-blue-700">
+       <h2 class="text-lg font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="megaphone" class="w-5 h-5"></i> ข้อความวิ่ง (ข่าวด่วน)</h2>
+       <div>
+        <label class="block text-sm font-medium text-blue-100 mb-2">ข้อความที่แสดงในแถบข่าวด่วน (คั่นแต่ละข้อความด้วยเครื่องหมาย | )</label>
+        <textarea id="edit-ticker-text" placeholder="🎉 ข้อความ 1 | 📢 ข้อความ 2 | ..." class="w-full px-4 py-3 border-2 border-blue-300 rounded-xl focus:outline-none focus:border-white transition bg-white/90 text-gray-800" rows="3"></textarea>
+        <p class="text-blue-200 text-xs mt-1">เช่น: 🎉 ยินดีต้อนรับ | 📚 เปิดรับสมัครนักเรียนใหม่ | 🏆 ขอแสดงความยินดี</p>
+       </div>
+      </div><!-- Footer Info Section -->
+      <div class="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-2xl p-6 border border-teal-200">
+       <h2 class="text-lg font-bold text-teal-800 mb-4 flex items-center gap-2"><i data-lucide="layout-panel-bottom" class="w-5 h-5"></i> ข้อมูลส่วนท้าย (Footer)</h2>
+       <div class="space-y-4">
+        <div>
+         <label class="block text-sm font-medium text-gray-700 mb-2">⏰ เวลาทำการ (บรรทัด 1 เช่น: วันจันทร์ - ศุกร์)</label>
+         <input type="text" id="edit-working-hours-line1" placeholder="วันจันทร์ - ศุกร์" class="w-full px-4 py-3 border-2 border-teal-200 rounded-xl focus:outline-none focus:border-teal-500 transition">
+        </div>
+        <div>
+         <label class="block text-sm font-medium text-gray-700 mb-2">⏰ เวลาทำการ (บรรทัด 2 เช่น: 08:00 - 16:30 น.)</label>
+         <input type="text" id="edit-working-hours-line2" placeholder="08:00 - 16:30 น." class="w-full px-4 py-3 border-2 border-teal-200 rounded-xl focus:outline-none focus:border-teal-500 transition">
+        </div>
+        <div>
+         <label class="block text-sm font-medium text-gray-700 mb-2">⏰ เวลาทำการ (บรรทัด 3 เช่น: หมายเหตุวันหยุด)</label>
+         <input type="text" id="edit-working-hours-line3" placeholder="(หยุดวันเสาร์-อาทิตย์และวันหยุดราชการ)" class="w-full px-4 py-3 border-2 border-teal-200 rounded-xl focus:outline-none focus:border-teal-500 transition">
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+         <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">🔵 ลิงก์ Facebook</label>
+          <input type="url" id="edit-facebook-url" placeholder="https://facebook.com/..." class="w-full px-4 py-3 border-2 border-teal-200 rounded-xl focus:outline-none focus:border-teal-500 transition">
+         </div>
+         <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">🟢 ลิงก์ Line</label>
+          <input type="url" id="edit-line-url" placeholder="https://line.me/..." class="w-full px-4 py-3 border-2 border-teal-200 rounded-xl focus:outline-none focus:border-teal-500 transition">
+         </div>
+         <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">🔴 ลิงก์ YouTube</label>
+          <input type="url" id="edit-youtube-url" placeholder="https://youtube.com/..." class="w-full px-4 py-3 border-2 border-teal-200 rounded-xl focus:outline-none focus:border-teal-500 transition">
+         </div>
+        </div>
+        <div>
+         <label class="block text-sm font-medium text-gray-700 mb-2">© ข้อความลิขสิทธิ์ (Copyright)</label>
+         <input type="text" id="edit-copyright-text" placeholder="© 2569 โรงเรียนกุศลวิทยา | ระบบสารสนเทศโรงเรียน" class="w-full px-4 py-3 border-2 border-teal-200 rounded-xl focus:outline-none focus:border-teal-500 transition">
+        </div>
+       </div>
+      </div>
+
+      <!-- About Section -->
+      <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-6 border border-purple-200">
+       <h2 class="text-lg font-bold text-purple-800 mb-4 flex items-center gap-2"><i data-lucide="book" class="w-5 h-5"></i> เกี่ยวกับโรงเรียน</h2>
+       <div class="space-y-4">
+        <div>
+         <label class="block text-sm font-medium text-gray-700 mb-2">ประวัติโรงเรียน</label>
+         <textarea id="edit-school-history" placeholder="ประวัติโรงเรียน" class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:outline-none focus:border-purple-500 transition" rows="3"></textarea>
+        </div>
+        <div>
+         <label class="block text-sm font-medium text-gray-700 mb-2">วิสัยทัศน์</label>
+         <input type="text" id="edit-vision" placeholder="วิสัยทัศน์" class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:outline-none focus:border-purple-500 transition">
+        </div>
+        <div>
+         <label class="block text-sm font-medium text-gray-700 mb-2">พันธกิจ</label>
+         <input type="text" id="edit-mission" placeholder="พันธกิจ" class="w-full px-4 py-3 border-2 border-purple-200 rounded-xl focus:outline-none focus:border-purple-500 transition">
+        </div>
+       </div>
+      </div>
+
+      <!-- Gallery Section -->
+      <div class="bg-gradient-to-r from-sky-50 to-blue-50 rounded-2xl p-6 border border-sky-200">
+       <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold text-sky-800 flex items-center gap-2"><i data-lucide="image" class="w-5 h-5"></i> บรรยากาศโรงเรียน (รวมรูปกิจกรรม)</h2>
+        <button type="button" onclick="addGalleryItem()" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-full text-sm font-medium flex items-center gap-1 transition">
+         <i data-lucide="plus" class="w-4 h-4"></i> เพิ่มรูปกิจกรรม
+        </button>
+       </div>
+       <div id="gallery-admin-container" class="grid grid-cols-1 gap-3"></div>
+      </div><!-- Quick Links Section -->
+      <div class="bg-gradient-to-r from-teal-50 to-emerald-50 rounded-2xl p-6 border border-teal-200">
+       <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold text-teal-800 flex items-center gap-2"><i data-lucide="link" class="w-5 h-5"></i> ลิงก์ด่วน (Quick Links)</h2>
+        <button type="button" onclick="addQuickLinkItem()" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-full text-sm font-medium flex items-center gap-1 transition">
+         <i data-lucide="plus" class="w-4 h-4"></i> เพิ่มลิงก์ด่วน
+        </button>
+       </div>
+       <p class="text-xs text-gray-500 mb-3">คุณสามารถกำหนดให้ปุ่มลิงก์ด่วนในหน้าหลักเปิดหน้าเพจภายในระบบ หรือไปลิงก์ภายนอกได้</p>
+       <div id="quick-links-admin-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </div><!-- News & Activities Section -->
+      <div class="bg-gradient-to-r from-rose-50 to-pink-50 rounded-2xl p-6 border border-rose-200">
+       <h2 class="text-lg font-bold text-rose-800 flex items-center gap-2 mb-4"><i data-lucide="newspaper" class="w-5 h-5"></i> ข่าวสารและกิจกรรมโรงเรียน</h2>
+       <div class="space-y-4" id="news-activities-container">
+        <!-- 3 หมวด render โดย JS -->
+       </div>
+      </div><!-- Menu Items Section -->
+      <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-6 border border-blue-200">
+       <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-bold text-blue-800 flex items-center gap-2"><i data-lucide="layout-grid" class="w-5 h-5"></i> การ์ดเมนูหลัก</h2>
+        <button type="button" onclick="addMenuItem()" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1.5 rounded-full text-sm font-medium flex items-center gap-1 transition">
+         <i data-lucide="plus" class="w-4 h-4"></i> เพิ่มเมนูหลัก
+        </button>
+       </div>
+       <p class="text-xs text-gray-500 mb-3">คุณสามารถสร้างเมนูเพื่อให้เปิดลิงก์ข้างนอกได้ตามต้องการ</p>
+       <div id="menu-items-container" class="space-y-3"></div>
+      </div><!-- Security Section -->
+      <div class="bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-6 border border-red-200">
+       <h2 class="text-lg font-bold text-red-800 mb-4 flex items-center gap-2"><i data-lucide="lock" class="w-5 h-5"></i> ความปลอดภัยของระบบ</h2>
+       <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">รหัสผ่านแอดมินสำหรับแก้ไขข้อมูล</label> 
+        <input type="password" id="edit-admin-password" placeholder="รหัสผ่านแอดมินใหม่" class="w-full px-4 py-3 border-2 border-red-200 rounded-xl focus:outline-none focus:border-red-500 transition">
+       </div>
+      </div><!-- Submit Button -->
+      <div class="flex flex-col sm:flex-row gap-4 pt-4">
+       <button type="submit" class="flex-1 bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3.5 rounded-xl font-bold hover:shadow-lg transition flex items-center justify-center gap-2"> <i data-lucide="save" class="w-5 h-5"></i> บันทึกข้อมูลโรงเรียน </button> 
+       <button type="button" onclick="navigateTo('home-page')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-3.5 px-6 rounded-xl font-bold transition flex items-center justify-center gap-2"> <i data-lucide="x" class="w-5 h-5"></i> ยกเลิก </button>
+      </div>
+     </form>
+    </div>
+   </div>
+  </div>
+
+  <script>
+    // ── Config เริ่มต้นของระบบโรงเรียนกุศลวิทยา ──────────────────────────────────
+    const defaultConfig = {
+      school_name: 'ระบบสารสนเทศ โรงเรียนกุศลวิทยา',
+      school_motto: '"วิชาการเด่น เน้นคุณธรรม นำสู่ความสำเร็จ"',
+      student_count: '130',
+      staff_count: '14',
+      banner_image: '',
+      school_icon: '',
+      icon_color1: '#3b82f6',
+      icon_color2: '#6366f1',
+      address: '1 หมู่ 1 ตำบล : บางยาง อำเภอ : กระทุ่มแบน จังหวัด : สมุทรสาคร 74110',
+      phone: '034-866-088',
+      fax: '034-866-088',
+      email: 'comkusol@gmail.com',
+      school_history: 'โรงเรียนกุศลวิทยาเป็นสถานศึกษาที่มุ่งเน้นพัฒนาผู้เรียนให้มีความรู้คู่คุณธรรม ส่งเสริมให้นักเรียนมีทักษะการเรียนรู้ในศตวรรษที่ 21 พร้อมรับความเปลี่ยนแปลงของโลก',
+      vision: 'พัฒนาผู้เรียนให้เป็นคนดี มีความรู้ อยู่ในสังคมอย่างมีความสุข',
+      mission: 'จัดการศึกษาที่มีคุณภาพ พัฒนาผู้เรียนให้มีความสามารถทางวิชาการและทักษะชีวิต',
+      working_hours_line1: 'วันจันทร์ - ศุกร์',
+      working_hours_line2: '08:00 - 16:30 น.',
+      working_hours_line3: '(หยุดวันเสาร์-อาทิตย์และวันหยุดราชการ)',
+      facebook_url: '#facebook',
+      line_url: '#line',
+      youtube_url: '#youtube',
+      copyright_text: '© 2569 โรงเรียนกุศลวิทยา | ระบบสารสนเทศโรงเรียน',
+      ticker_text: '🎉 ยินดีต้อนรับสู่ระบบสารสนเทศโรงเรียนกุศลวิทยาประจำปีการศึกษา 2569 | 📚 เปิดรับสมัครนักเรียนใหม่ประจำปีการศึกษา 2569 แล้ววันนี้ | 🏆 ขอแสดงความยินดีกับนักเรียนที่ได้รับรางวัลการแข่งขันวิชาการ | 📅 กำหนดการสอบกลางภาค 1/2569 วันที่ 3-7 สิงหาคม 2569',
+      admin_password: '130859',
+      quick_links: JSON.stringify([
+        { id: 'ql-1', label: 'ตารางเรียน', icon: 'calendar', target: 'schedule-page', type: 'internal' },
+        { id: 'ql-2', label: 'ตารางสอบ', icon: 'file-text', target: 'exam-page', type: 'internal' },
+        { id: 'ql-3', label: 'ผลการเรียน', icon: 'award', target: 'grades-page', type: 'internal' },
+        { id: 'ql-4', label: 'ติดต่อโรงเรียน', icon: 'phone', target: 'contact-page', type: 'internal' },
+        { id: 'ql-5', label: 'แผนที่', icon: 'map-pin', target: 'map-page', type: 'internal' }
+      ]),
+      menu_items: JSON.stringify([
+        { id: 'menu-1', label: '📦 ระบบจัดการพัสดุ', url: 'https://kusol-parcel-system.example.com', color: 'from-amber-400 to-orange-500' },
+        { id: 'menu-2', label: '🖼 ภาพกิจกรรมทั้งหมด', url: 'https://kusol-gallery.example.com', color: 'from-pink-400 to-rose-500' },
+        { id: 'menu-3', label: '📄 ข้อมูลระบบนักเรียน', url: 'https://kusol-student-database.example.com', color: 'from-emerald-400 to-teal-500' }
+      ]),
+      gallery_items: JSON.stringify([
+        { id: 'g-1', label: 'อาคารเรียนกุศลวิทยา', emoji: '🏫', image: '', color: 'from-blue-100 to-blue-200' },
+        { id: 'g-2', label: 'บรรยากาศรอบสนามเรียน', emoji: '🌳', image: '', color: 'from-green-100 to-emerald-200' },
+        { id: 'g-3', label: 'การจัดบอร์ดห้องเรียน', emoji: '📖', image: '', color: 'from-purple-100 to-pink-200' },
+        { id: 'g-4', label: 'การประกวดงานศิลปะ', emoji: '🎨', image: '', color: 'from-orange-100 to-amber-200' }
+      ]),
+      news_activities: JSON.stringify({
+        news: {
+          posts: [
+            { id: 'p-n1', title: 'เปิดรับสมัครนักเรียนใหม่ ประจำปีการศึกษา 2569', desc: 'เรียนเชิญผู้ปกครองติดต่อสอบถามการสมัครเรียนและหลักสูตรเทคโนโลยีหุ่นยนต์ได้ที่อาคารอำนวยการ', url: '', image: '' },
+            { id: 'p-n2', title: 'ตารางสอนและรายละเอียดกำหนดสอบกลางภาคเรียนที่ 1/2569', desc: 'เริ่มการสอบกลางภาคตั้งแต่วันที่ 3-7 สิงหาคม พ.ศ. 2569 นี้', url: '', image: '' }
+          ]
+        },
+        activities: {
+          posts: [
+            { id: 'p-a1', title: 'กิจกรรมพัฒนาทักษะด้าน Coding ประจำปี 2569', desc: 'รวมภาพแห่งความสนุกสนานของนักเรียนในการเขียนโค้ดและพัฒนาบอร์ดสมองกลฝังตัว', url: '', image: '' },
+            { id: 'p-a2', title: 'กิจกรรมวันไหว้ครู ประจำปีการศึกษา 2569', desc: 'นักเรียนร่วมใจนอบน้อมรำลึกถึงพระคุณครูบาอาจารย์ในยุคดิจิทัล', url: '', image: '' }
+          ]
+        },
+        announcement: {
+          posts: [
+            { id: 'p-c1', title: 'ประกาศวันเปิดภาคเรียนที่ 1 ประจำปีการศึกษา 2569', desc: 'เปิดภาคเรียนอย่างเป็นทางการพร้อมต้อนรับวิทยากรพิเศษเข้าสู่ห้องเรียนคอมพิวเตอร์', url: '', image: '' }
+          ]
+        }
+      })
+    };
+
+    // ── ตรวจจับ แหล่งเก็บข้อมูล (Storage Engine) ─────────────────────────────
+    let _configCache = null;
+    let isGoogleAppsScript = (typeof google !== 'undefined' && google.script && google.script.run);
+
+    function showToast(text, type = 'success') {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      const toast = document.createElement('div');
+      toast.className = `flex items-center gap-2 px-4 py-3 rounded-xl shadow-xl text-sm font-semibold transition-all duration-300 transform translate-x-12 opacity-0 pointer-events-auto max-w-sm border ${
+        type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' :
+        type === 'error' ? 'bg-rose-50 border-rose-200 text-rose-800' : 'bg-blue-50 border-blue-200 text-blue-800'
+      }`;
+      
+      const icon = type === 'success' ? 'check-circle' : type === 'error' ? 'alert-triangle' : 'info';
+      toast.innerHTML = `<i data-lucide="${icon}" class="w-4 h-4 flex-shrink-0"></i> <span>${text}</span>`;
+      container.appendChild(toast);
+      lucide.createIcons();
+      
+      setTimeout(() => {
+        toast.classList.remove('translate-x-12', 'opacity-0');
+      }, 50);
+
+      setTimeout(() => {
+        toast.classList.add('translate-x-12', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    function initStorageEngine() {
+      const badge = document.getElementById('storage-badge');
+      const ind = document.getElementById('admin-storage-indicator');
+      if (isGoogleAppsScript) {
+        if (badge) badge.innerHTML = `<span class="bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full text-[10px]">☁️ Google Workspace Cloud</span>`;
+        if (ind) ind.textContent = '☁️ บันทึกลงระบบคลาวด์ Google Workspace';
+      } else {
+        if (badge) badge.innerHTML = `<span class="bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full text-[10px]">💾 GitHub / Browser Storage</span>`;
+        if (ind) ind.textContent = '💾 บันทึกลงบราวเซอร์ส่วนตัวของคุณ';
+      }
+    }
+
+    function getConfig() {
+      if (_configCache) return { ...defaultConfig, ..._configCache };
+      
+      if (!isGoogleAppsScript) {
+        // ใช้ LocalStorage เมื่ออยู่บนเบราว์เซอร์ปกติ
+        const localData = localStorage.getItem('school_config_local');
+        if (localData) {
+          try {
+            _configCache = JSON.parse(localData);
+          } catch(e) {
+            console.error('Local JSON Error:', e);
+          }
+        }
+      }
+      return _configCache ? { ...defaultConfig, ..._configCache } : defaultConfig;
+    }
+
+    function saveConfig(cfg) {
+      _configCache = cfg;
+      if (isGoogleAppsScript) {
+        google.script.run
+          .withSuccessHandler(function() { showToast('อัปเดตระบบคลาวด์โรงเรียนสำเร็จ'); })
+          .withFailureHandler(function(e) { showToast('เกิดข้อผิดพลาดคลาวด์: ' + e.message, 'error'); })
+          .saveConfig(JSON.stringify(cfg));
+      } else {
+        localStorage.setItem('school_config_local', JSON.stringify(cfg));
+        showToast('บันทึกการตั้งค่าลงบราวเซอร์สำเร็จ');
+      }
+    }
+
+    // Navigation function
+    function navigateTo(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      
+      const selectedPage = document.getElementById(pageId);
+      if (selectedPage) {
+        selectedPage.classList.add('active');
+        window.scrollTo(0, 0);
+        
+        if (pageId === 'admin-edit-page') {
+          loadAdminEditForm();
+        } else if (pageId === 'contact-page') {
+          renderContactPage();
+        }
+      }
+    }
+
+    // ── บรรยากาศโรงเรียน ──────────────────────────────────────────────────────
+    function renderGallery() {
+      const config = getConfig();
+      const container = document.getElementById('gallery-grid');
+      if (!container) return;
+      let items = [];
+      try { items = JSON.parse(config.gallery_items || '[]'); } catch(e) {}
+      if (!items.length) { container.innerHTML = '<p class="col-span-2 text-center text-gray-400 py-6 text-sm">ยังไม่มีรูปภาพ</p>'; return; }
+      container.innerHTML = items.map(item => {
+        const hasImg = item.image && item.image.trim();
+        return `
+          <div class="rounded-2xl overflow-hidden aspect-square relative group shadow border border-slate-100">
+            ${hasImg
+              ? `<img src="${item.image}" class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105" onerror="this.parentElement.innerHTML='<div class=w-full h-full bg-slate-200></div>'">`
+              : `<div class="w-full h-full bg-gradient-to-br ${item.color||'from-blue-100 to-blue-200'} flex flex-col items-center justify-center">
+                   <div class="text-5xl mb-2">${item.emoji||'📷'}</div>
+                   <p class="text-sm font-bold text-gray-700 text-center px-2">${item.label||''}</p>
+                 </div>`
+            }
+            ${hasImg ? `<div class="absolute bottom-0 left-0 right-0 bg-black/55 px-3 py-2"><p class="text-white text-xs font-semibold">${item.label||''}</p></div>` : ''}
+          </div>`;
+      }).join('');
+    }
+
+    function renderGalleryAdminItem(item, container) {
+      const ea = s => String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const gid = item.id || ('g-'+Date.now());
+      const div = document.createElement('div');
+      div.setAttribute('data-gallery-id', gid);
+      div.className = 'bg-white border border-gray-200 rounded-xl p-3 shadow-sm';
+      div.innerHTML = `
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-semibold text-gray-600">📷 รูปภาพ</span>
+          <button type="button" onclick="removeGalleryItem('${gid}')"
+            class="bg-red-500 hover:bg-red-600 text-white px-2 py-0.5 rounded text-xs flex items-center gap-1">
+            <i data-lucide="trash-2" class="w-3 h-3"></i> ลบ
+          </button>
+        </div>
+        <div class="space-y-1.5">
+          <input type="text" data-g-label placeholder="ชื่อกิจกรรม เช่น อาคารเรียน"
+            class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400"
+            value="${ea(item.label||'')}">
+          <div class="flex gap-2">
+            <input type="text" data-g-emoji placeholder="emoji 🏫"
+              class="w-20 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400 text-center"
+              value="${ea(item.emoji||'')}">
+            <select data-g-color class="flex-1 px-2 py-2 border border-gray-200 rounded-lg text-xs focus:outline-none focus:border-blue-400">
+              <option value="from-blue-100 to-blue-200"     ${(item.color||'').includes('blue-100')?'selected':''}>🔵 น้ำเงิน</option>
+              <option value="from-green-100 to-emerald-200" ${(item.color||'').includes('green')?'selected':''}>🟢 เขียว</option>
+              <option value="from-purple-100 to-pink-200"   ${(item.color||'').includes('purple')?'selected':''}>💜 ม่วง</option>
+              <option value="from-orange-100 to-amber-200"  ${(item.color||'').includes('orange')?'selected':''}>🟠 ส้ม</option>
+              <option value="from-rose-100 to-red-200"      ${(item.color||'').includes('rose')?'selected':''}>🔴 แดง</option>
+              <option value="from-cyan-100 to-sky-200"      ${(item.color||'').includes('cyan')?'selected':''}>🩵 ฟ้า</option>
+            </select>
+          </div>
+          <div class="flex gap-2 items-center">
+            <input type="url" data-g-image placeholder="URL รูปภาพบรรยากาศ"
+              class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400"
+              value="${ea(item.image||'')}" oninput="previewGalleryImg('${gid}',this.value)">
+            <label class="cursor-pointer bg-gray-100 hover:bg-gray-200 px-2 py-2 rounded-lg text-xs text-gray-600 flex items-center gap-1 whitespace-nowrap">
+              <i data-lucide="upload" class="w-3 h-3"></i> อัปโหลดภาพ
+              <input type="file" accept="image/*" class="hidden" onchange="uploadGalleryImg('${gid}',this)">
+            </label>
+          </div>
+          <div id="gprev-${gid}" class="${item.image?'':'hidden'}">
+            <img src="${ea(item.image||'')}" class="w-full h-24 object-cover rounded-lg border border-gray-100"
+              onerror="this.parentElement.classList.add('hidden')">
+          </div>
+        </div>`;
+      container.appendChild(div);
+      lucide.createIcons();
+    }
+
+    function previewGalleryImg(gid, url) {
+      const box = document.getElementById('gprev-'+gid);
+      if (!box) return;
+      if (url) { box.classList.remove('hidden'); box.querySelector('img').src = url; }
+      else      { box.classList.add('hidden'); }
+    }
+
+    // ── อัปโหลดรูปภาพ ────────────────────────────────────────────────────────
+    function uploadToDrive(base64Data, filename, onSuccess, onError) {
+      if (isGoogleAppsScript) {
+        google.script.run
+          .withSuccessHandler(function(url) {
+            if (onSuccess) onSuccess(url);
+          })
+          .withFailureHandler(function(err) {
+            showToast('อัปโหลดล้มเหลว: ' + err.message, 'error');
+            if (onError) onError(err);
+          })
+          .uploadImageToDrive(base64Data, filename);
+      } else {
+        // หากเปิดจาก Browser ปกติ จะแสดงสัญลักษณ์ความปลอดภัยจำลอง และส่ง Base64 กลับมาเพื่อใช้ใน Session ทันที
+        showToast('บันทึกรูปภาพจำลองเสร็จสิ้น (แบบออฟไลน์)', 'success');
+        if (onSuccess) onSuccess(base64Data);
+      }
+    }
+
+    function uploadGalleryImg(gid, input) {
+      const file = input.files[0]; if (!file) return;
+      const label = input.closest('[data-gallery-id]')?.querySelector('[data-g-image]');
+      const btn   = input.closest('label');
+      if (btn) btn.innerHTML = '⏳ กำลังประมวลผล...';
+      const reader = new FileReader();
+      reader.onload = e => {
+        const filename = 'gallery_' + Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.]/g,'_');
+        uploadToDrive(e.target.result, filename, function(url) {
+          if (label) label.value = url;
+          previewGalleryImg(gid, url);
+          if (btn) { btn.innerHTML = '<i data-lucide="check" class="w-3 h-3"></i> เรียบร้อย'; lucide.createIcons(); }
+        }, function() {
+          if (btn) btn.innerHTML = '<i data-lucide="upload" class="w-3 h-3"></i> ลองใหม่';
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function addGalleryItem() {
+      const container = document.getElementById('gallery-admin-container');
+      renderGalleryAdminItem({ id: 'g-'+Date.now() }, container);
+    }
+
+    function removeGalleryItem(gid) {
+      const el = document.querySelector('[data-gallery-id="'+gid+'"]');
+      if (el) el.remove();
+    }
+    // ──────────────────────────────────────────────────────────────────────────
+
+    // ── เมนูหลัก ──────────────────────────────────────────────────────────────
+    function renderMenuButtons() {
+      const config = getConfig();
+      const container = document.getElementById('menu-buttons-container');
+      let items = [];
+      try { items = JSON.parse(config.menu_items || '[]'); } catch(e) {}
+
+      if (!items.length) {
+        container.innerHTML = '<p class="col-span-3 text-center text-gray-400 py-8">ยังไม่มีเมนู</p>';
+        return;
+      }
+
+      container.innerHTML = items.map(item => {
+        const color   = item.color || 'from-blue-400 to-blue-600';
+        const hasUrl  = item.url && item.url.trim();
+        const tag     = hasUrl ? 'a' : 'div';
+        const attrs   = hasUrl ? `href="${item.url}" target="_blank" rel="noopener"` : '';
+        return `
+          <${tag} ${attrs}
+            class="menu-card block bg-white rounded-3xl p-8 shadow-md border-2 border-blue-50
+                   hover:border-blue-300 ${hasUrl ? 'cursor-pointer' : 'opacity-80'} text-center
+                   transition-all duration-300 hover:-translate-y-2">
+            <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br ${color}
+                        rounded-2xl flex items-center justify-center shadow-md">
+              <i data-lucide="external-link" class="w-10 h-10 text-white"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-3">${item.label}</h3>
+            <span class="inline-flex items-center gap-1 text-sm font-semibold
+                         ${hasUrl ? 'text-blue-600' : 'text-gray-400'}">
+              ${hasUrl
+                ? '<i data-lucide="arrow-right" class="w-4 h-4"></i> เข้าสู่ระบบออนไลน์'
+                : '<i data-lucide="lock" class="w-4 h-4"></i> ไม่มีลิงก์'}
+            </span>
+          </${tag}>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function buildMenuItemHTML(itemId, data = {}) {
+      const ea  = s => String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const label = ea(data.label || '');
+      const url   = ea(data.url   || '');
+      const color = data.color || 'from-blue-400 to-blue-600';
+      const colors = [
+        ['from-amber-400 to-orange-500',  '🟠 ส้ม-เหลือง'],
+        ['from-pink-400 to-rose-500',     '🌸 ชมพู-แดง'],
+        ['from-emerald-400 to-teal-500',  '🟢 เขียว-เทียล'],
+        ['from-blue-400 to-blue-600',     '🔵 น้ำเงิน'],
+        ['from-purple-400 to-pink-500',   '💜 ม่วง-ชมพู'],
+        ['from-cyan-400 to-sky-500',      '🩵 ฟ้า'],
+        ['from-red-400 to-rose-500',      '🔴 แดง'],
+        ['from-indigo-400 to-purple-600', '🟣 คราม'],
+      ];
+      return `
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm font-semibold text-blue-700">🗂 รายการเมนูหลัก</span>
+          <button type="button" onclick="removeMenuItem('${itemId}')"
+            class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs
+                   font-medium flex items-center gap-1 transition">
+            <i data-lucide="trash-2" class="w-3 h-3"></i> ลบออก
+          </button>
+        </div>
+        <div class="space-y-2">
+          <input type="text" data-menu-label="${itemId}"
+            placeholder="ชื่อเมนู เช่น 📦 ระบบพัสดุโรงเรียน"
+            class="w-full px-3 py-2 border-2 border-blue-200 rounded-lg
+                   focus:outline-none focus:border-blue-500 text-sm"
+            value="${label}">
+          <input type="url" data-menu-url="${itemId}"
+            placeholder="ใส่ URL ระบบออนไลน์ภายนอก (หากต้องการ)"
+            class="w-full px-3 py-2 border-2 border-blue-200 rounded-lg
+                   focus:outline-none focus:border-blue-500 text-sm"
+            value="${url}">
+          <div>
+            <label class="text-xs text-gray-500 mb-1 block">🎨 สีของการ์ดเมนู</label>
+            <select data-menu-color="${itemId}"
+              class="w-full px-3 py-2 border-2 border-blue-200 rounded-lg
+                     focus:outline-none focus:border-blue-500 text-sm">
+              ${colors.map(([v,l]) => `<option value="${v}" ${color===v?'selected':''}>${l}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+      `;
+    }
+
+    function addMenuItem() {
+      const container = document.getElementById('menu-items-container');
+      const itemId = 'menu-' + Date.now();
+      const div = document.createElement('div');
+      div.setAttribute('data-menu-item-id', itemId);
+      div.className = 'bg-white border-l-4 border-blue-400 p-4 rounded-xl shadow-sm';
+      div.innerHTML = buildMenuItemHTML(itemId);
+      container.appendChild(div);
+      lucide.createIcons();
+    }
+
+    function removeMenuItem(itemId) {
+      const el = document.querySelector('[data-menu-item-id="' + itemId + '"]');
+      if (el) el.remove();
+    }
+
+    // ── ระบบจัดการลิงก์ด่วน (Quick Links Setup) ──────────────────────────────────
+    function renderQuickLinks() {
+      const config = getConfig();
+      const container = document.getElementById('quick-links-container');
+      if (!container) return;
+      
+      let items = [];
+      try {
+        items = JSON.parse(config.quick_links || '[]');
+      } catch(e) {
+        console.error("Error parsing quick_links:", e);
+      }
+      
+      if (!items.length) {
+        container.innerHTML = '<p class="text-white/60 text-sm">ยังไม่มีลิงก์ด่วน</p>';
+        return;
+      }
+      
+      container.innerHTML = items.map(item => {
+        const icon = item.icon || 'link';
+        if (item.type === 'internal') {
+          return `
+            <button onclick="navigateTo('${item.target}')" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full text-sm font-medium transition flex items-center gap-2">
+              <i data-lucide="${icon}" class="w-4 h-4"></i>
+              <span>${item.label}</span>
+            </button>
+          `;
+        } else {
+          return `
+            <a href="${item.target}" target="_blank" rel="noopener noreferrer" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-full text-sm font-medium transition flex items-center gap-2">
+              <i data-lucide="${icon}" class="w-4 h-4"></i>
+              <span>${item.label}</span>
+            </a>
+          `;
+        }
+      }).join('');
+      
+      lucide.createIcons();
+    }
+
+    function renderQuickLinkAdminItem(item, container) {
+      const ea = s => String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const qid = item.id || ('ql-' + Date.now() + Math.random().toString(36).slice(2, 6));
+      const div = document.createElement('div');
+      div.setAttribute('data-quick-link-id', qid);
+      div.className = 'bg-white border-2 border-emerald-100 rounded-2xl p-5 shadow-sm space-y-4 transition hover:border-emerald-200';
+      
+      const icons = ['calendar', 'file-text', 'award', 'phone', 'map-pin', 'link', 'globe', 'info', 'book-open', 'users', 'message-circle', 'bell', 'graduation-cap', 'search'];
+      const pageOptions = [
+        { value: 'schedule-page', label: 'ตารางเรียน (Schedule)' },
+        { value: 'exam-page', label: 'ตารางสอบ (Exams)' },
+        { value: 'grades-page', label: 'ผลการเรียน (Grades)' },
+        { value: 'contact-page', label: 'ติดต่อโรงเรียน (Contact)' },
+        { value: 'map-page', label: 'แผนที่ (Map)' }
+      ];
+
+      const isExternal = item.type === 'external';
+
+      div.innerHTML = `
+        <div class="flex items-center justify-between pb-1 border-b border-slate-50">
+          <div class="flex items-center gap-2">
+            <i data-lucide="link" class="w-4 h-4 text-emerald-600"></i>
+            <span class="text-sm font-bold text-emerald-800">ปุ่มลิงก์ด่วน</span>
+          </div>
+          <button type="button" onclick="removeQuickLinkItem('${qid}')"
+            class="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition shadow-sm hover:shadow">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> ลบ
+          </button>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Column 1: ชื่อปุ่ม -->
+          <div>
+            <label class="flex items-center gap-1.5 text-xs font-semibold text-slate-600 mb-1.5">
+              <i data-lucide="edit-3" class="w-3.5 h-3.5 text-slate-400"></i>
+              <span>ชื่อปุ่ม *</span>
+            </label>
+            <input type="text" data-ql-label placeholder="ระบุชื่อปุ่ม เช่น ตารางเรียน"
+              class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition"
+              value="${ea(item.label||'')}">
+          </div>
+          <!-- Column 2: ไอคอน -->
+          <div>
+            <label class="flex items-center gap-1.5 text-xs font-semibold text-slate-600 mb-1.5">
+              <i data-lucide="palette" class="w-3.5 h-3.5 text-amber-500"></i>
+              <span>ไอคอน</span>
+            </label>
+            <select data-ql-icon class="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition bg-white cursor-pointer">
+              ${icons.map(ic => `<option value="${ic}" ${item.icon === ic ? 'selected' : ''}>${ic}</option>`).join('')}
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Column 3: ประเภทเป้าหมาย -->
+          <div>
+            <label class="flex items-center gap-1.5 text-xs font-semibold text-slate-600 mb-1.5">
+              <i data-lucide="compass" class="w-3.5 h-3.5 text-amber-600"></i>
+              <span>ประเภทเป้าหมาย</span>
+            </label>
+            <select data-ql-type onchange="toggleQuickLinkTargetField('${qid}', this.value)"
+              class="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition bg-white cursor-pointer">
+              <option value="internal" ${item.type === 'internal' ? 'selected' : ''}>หน้าภายในระบบ</option>
+              <option value="external" ${item.type === 'external' ? 'selected' : ''}>ลิงก์เว็บไซต์ภายนอก</option>
+            </select>
+          </div>
+          <!-- Column 4: ปลายทาง / ลิงก์ -->
+          <div>
+            <label class="flex items-center gap-1.5 text-xs font-semibold text-slate-600 mb-1.5">
+              <i data-lucide="link-2" class="w-3.5 h-3.5 text-slate-500"></i>
+              <span>ปลายทาง / ลิงก์</span>
+            </label>
+            
+            <div id="target-internal-box-${qid}" class="${isExternal ? 'hidden' : ''}">
+              <select data-ql-target-internal class="w-full px-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-teal-400 focus:ring-1 focus:ring-teal-400 transition bg-white cursor-pointer">
+                ${pageOptions.map(opt => `<option value="${opt.value}" ${item.target === opt.value ? 'selected' : ''}>${opt.label}</option>`).join('')}
+              </select>
+            </div>
+            
+            <div id="target-external-box-${qid}" class="${!isExternal ? 'hidden' : ''}">
+              <input type="url" data-ql-target-external placeholder="https://..."
+                class="w-full px-4 py-2.5 border border-teal-400 rounded-xl text-sm focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition shadow-inner bg-slate-50"
+                value="${isExternal ? ea(item.target||'') : ''}">
+            </div>
+          </div>
+        </div>
+      `;
+      container.appendChild(div);
+      lucide.createIcons();
+    }
+
+    function toggleQuickLinkTargetField(qid, type) {
+      const intBox = document.getElementById('target-internal-box-' + qid);
+      const extBox = document.getElementById('target-external-box-' + qid);
+      if (type === 'internal') {
+        intBox.classList.remove('hidden');
+        extBox.classList.add('hidden');
+      } else {
+        intBox.classList.add('hidden');
+        extBox.classList.remove('hidden');
+      }
+    }
+
+    function addQuickLinkItem() {
+      const container = document.getElementById('quick-links-admin-container');
+      renderQuickLinkAdminItem({ id: 'ql-'+Date.now(), label: 'ลิงก์ใหม่', icon: 'link', type: 'internal', target: 'schedule-page' }, container);
+    }
+
+    function removeQuickLinkItem(qid) {
+      const el = document.querySelector('[data-quick-link-id="'+qid+'"]');
+      if (el) el.remove();
+    }
+    // ─────────────────────────────────────────────────────────────────────────────
+
+    // ── ข่าวสารและกิจกรรม ──────────────────────────────────────────────────
+    const NEWS_CATEGORIES = {
+      'news':         { label: '📰 ข่าวสารโรงเรียน',  icon: 'newspaper',    color: 'from-blue-400 to-blue-600',    border: 'border-blue-400',   bg: 'bg-blue-50',   text: 'text-blue-700'   },
+      'activities':   { label: '🎉 กิจกรรมโรงเรียน',  icon: 'party-popper', color: 'from-purple-400 to-pink-500',  border: 'border-purple-400', bg: 'bg-purple-50', text: 'text-purple-700' },
+      'announcement': { label: '📢 ประกาศโรงเรียน',   icon: 'megaphone',    color: 'from-amber-400 to-orange-500', border: 'border-amber-400',  bg: 'bg-amber-50',  text: 'text-amber-700'  },
+    };
+
+    function getNewsData() {
+      try {
+        const raw = JSON.parse(getConfig().news_activities || '{}');
+        if (Array.isArray(raw)) return { news:{posts:[]}, activities:{posts:[]}, announcement:{posts:[]} };
+        return {
+          news:         { posts: raw.news?.posts         || [] },
+          activities:   { posts: raw.activities?.posts   || [] },
+          announcement: { posts: raw.announcement?.posts || [] },
+        };
+      } catch(e) { return { news:{posts:[]}, activities:{posts:[]}, announcement:{posts:[]} }; }
+    }
+
+    function renderNewsActivitiesSection() {
+      const container = document.getElementById('news-activities-section');
+      if (!container) return;
+      const data = getNewsData();
+
+      container.innerHTML = Object.entries(NEWS_CATEGORIES).map(([key, cat]) => {
+        const posts = data[key]?.posts || [];
+        const postsHTML = posts.length ? posts.map(p => {
+          const tag   = p.url ? 'a' : 'div';
+          const attrs = p.url ? `href="${p.url}" target="_blank" rel="noopener"` : '';
+          return `
+            <${tag} ${attrs} class="flex gap-3 py-3 border-b border-gray-100 last:border-0 ${p.url?'hover:bg-slate-50 cursor-pointer':''} rounded-lg px-1 transition group">
+              ${p.image ? `<img src="${p.image}" class="w-16 h-16 object-cover rounded-lg flex-shrink-0 border border-gray-100" onerror="this.style.display='none'">` : ''}
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-gray-800 leading-snug ${p.url?'group-hover:text-blue-600':''}">${p.title||''}</p>
+                ${p.desc ? `<p class="text-xs text-gray-500 mt-1 line-clamp-2">${p.desc}</p>` : ''}
+                ${p.url ? `<span class="text-xs text-blue-500 mt-1 inline-flex items-center gap-1 font-semibold"><i data-lucide="arrow-right" class="w-3 h-3"></i>อ่านเพิ่ม</span>` : ''}
+              </div>
+            </${tag}>`;
+        }).join('') : `<p class="text-sm text-gray-400 text-center py-4">ยังไม่มีข่าวสารในหมวดนี้</p>`;
+
+        return `
+          <div class="bg-white rounded-2xl shadow-lg border border-blue-100 overflow-hidden">
+            <div class="h-24 bg-gradient-to-br ${cat.color} flex items-center justify-center">
+              <i data-lucide="${cat.icon}" class="w-10 h-10 text-white opacity-90"></i>
+            </div>
+            <div class="p-4">
+              <h3 class="text-base font-bold text-gray-800 mb-3">${cat.label}</h3>
+              <div class="divide-y divide-gray-100">${postsHTML}</div>
+            </div>
+          </div>`;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    // ── admin helpers ─────────────────────────────────────────────────────────
+    function renderNewsAdminPost(catKey, post, container) {
+      const ea = s => String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const pid = post.id || ('p-' + Date.now() + Math.random().toString(36).slice(2,6));
+      const cat = NEWS_CATEGORIES[catKey];
+      const div = document.createElement('div');
+      div.setAttribute('data-post-id', pid);
+      div.className = `bg-white border-l-4 ${cat.border} p-3 rounded-xl shadow-sm space-y-2`;
+      div.innerHTML = `
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-semibold ${cat.text}">ข่าวสารย่อย</span>
+          <button type="button" onclick="removeNewsPost('${pid}')"
+            class="bg-red-500 hover:bg-red-600 text-white px-2 py-0.5 rounded text-xs flex items-center gap-1">
+            <i data-lucide="trash-2" class="w-3 h-3"></i> ลบ
+          </button>
+        </div>
+        <div class="space-y-1.5">
+          <input type="text" data-p-title placeholder="หัวข้อข่าวสาร *"
+            class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400"
+            value="${ea(post.title||'')}">
+          <input type="text" data-p-desc placeholder="อธิบายย่อๆ"
+            class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400"
+            value="${ea(post.desc||'')}">
+          <input type="url" data-p-url placeholder="ลิงก์เชื่อมโยงเนื้อหา"
+            class="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400"
+            value="${ea(post.url||'')}">
+          <div class="flex gap-2 items-center">
+            <input type="url" data-p-image placeholder="URL รูปภาพหน้าปกข่าว"
+              class="flex-1 px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-400"
+              value="${ea(post.image||'')}" oninput="previewPostImg('${pid}',this.value)">
+            <label class="cursor-pointer bg-gray-100 hover:bg-gray-200 px-2 py-2 rounded-lg text-xs text-gray-600 flex items-center gap-1 whitespace-nowrap">
+              <i data-lucide="upload" class="w-3 h-3"></i> อัปโหลด
+              <input type="file" accept="image/*" class="hidden" onchange="uploadPostImg('${pid}',this)">
+            </label>
+          </div>
+          <div id="prev-${pid}" class="${post.image?'':'hidden'}">
+            <img src="${ea(post.image||'')}" class="w-full h-20 object-cover rounded-lg border border-gray-200"
+              onerror="this.parentElement.classList.add('hidden')">
+          </div>
+        </div>`;
+      container.appendChild(div);
+      lucide.createIcons();
+    }
+
+    function previewPostImg(pid, url) {
+      const box = document.getElementById('prev-'+pid);
+      if (!box) return;
+      if (url) { box.classList.remove('hidden'); box.querySelector('img').src = url; }
+      else { box.classList.add('hidden'); }
+    }
+
+    function uploadPostImg(pid, input) {
+      const file = input.files[0]; if (!file) return;
+      const btn = input.closest('label');
+      if (btn) btn.innerHTML = '⏳ กำลังอัปโหลด...';
+      const reader = new FileReader();
+      reader.onload = e => {
+        const filename = 'post_' + Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.]/g,'_');
+        uploadToDrive(e.target.result, filename, function(url) {
+          const div = document.querySelector('[data-post-id="'+pid+'"]');
+          if (div) div.querySelector('[data-p-image]').value = url;
+          previewPostImg(pid, url);
+          if (btn) { btn.innerHTML = '<i data-lucide="check" class="w-3 h-3"></i> เรียบร้อย'; lucide.createIcons(); }
+        }, function() {
+          if (btn) btn.innerHTML = '<i data-lucide="upload" class="w-3 h-3"></i> อัปโหลด';
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function addNewsPost(catKey) {
+      const container = document.getElementById('posts-container-'+catKey);
+      renderNewsAdminPost(catKey, { id: 'p-'+Date.now() }, container);
+    }
+
+    function removeNewsPost(pid) {
+      const el = document.querySelector('[data-post-id="'+pid+'"]');
+      if (el) el.remove();
+    }
+    // ─────────────────────────────────────────────────────────────────────────
+
+    // ── Banner preview helpers ────────────────────────────────────────────────
+    function updateAdminIconColors() {
+      const c1 = document.getElementById('edit-icon-color1')?.value || '#3b82f6';
+      const c2 = document.getElementById('edit-icon-color2')?.value || '#6366f1';
+      document.getElementById('edit-icon-color1-hex').value = c1;
+      document.getElementById('edit-icon-color2-hex').value = c2;
+      const circle = document.getElementById('icon-admin-circle');
+      if (circle) circle.style.background = `linear-gradient(135deg, ${c1} 50%, ${c2} 50%)`;
+    }
+
+    function syncColorHex(field, val) {
+      if (/^#[0-9a-fA-F]{6}$/.test(val)) {
+        document.getElementById('edit-'+field).value = val;
+        updateAdminIconColors();
+      }
+    }
+
+    function setIconColors(c1, c2) {
+      document.getElementById('edit-icon-color1').value = c1;
+      document.getElementById('edit-icon-color2').value = c2;
+      document.getElementById('edit-icon-color1-hex').value = c1;
+      document.getElementById('edit-icon-color2-hex').value = c2;
+      updateAdminIconColors();
+    }
+
+    function updateIconPreview(url) {
+      const img = document.getElementById('icon-preview-img');
+      const def = document.getElementById('icon-preview-default');
+      if (!img) return;
+      if (url) { img.src = url; img.classList.remove('hidden'); if(def) def.classList.add('hidden'); }
+      else      { img.classList.add('hidden'); if(def) def.classList.remove('hidden'); }
+    }
+
+    function handleIconFileUpload(input) {
+      const file = input.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const filename = 'icon_' + Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.]/g,'_');
+        uploadToDrive(e.target.result, filename, function(url) {
+          document.getElementById('edit-school-icon').value = url;
+          updateIconPreview(url);
+        }, null);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function applyIconColors(c1, c2) {
+      const circle = document.getElementById('school-icon-circle');
+      if (circle) circle.style.background = `linear-gradient(135deg, ${c1} 50%, ${c2} 50%)`;
+    }
+
+    function initSchoolIcon() {
+      const cfg = getConfig();
+      const url = cfg.school_icon || '';
+      const c1  = cfg.icon_color1 || '#3b82f6';
+      const c2  = cfg.icon_color2 || '#6366f1';
+      applyIconColors(c1, c2);
+      const img = document.getElementById('school-icon-img');
+      const def = document.getElementById('school-icon-default');
+      if (!img) return;
+      if (url) {
+        img.src = url;
+        img.classList.remove('hidden');
+        if (def) def.classList.add('hidden');
+      } else {
+        img.classList.add('hidden');
+        if (def) def.classList.remove('hidden');
+      }
+    }
+
+    function initBanner() {
+      const url = getConfig().banner_image || '';
+      const img = document.getElementById('banner-image');
+      const ph  = document.getElementById('banner-placeholder');
+      if (url) {
+        img.src = url;
+        img.style.display = '';
+        ph.style.display  = 'none';
+      } else {
+        img.style.display = 'none';
+        ph.style.display  = 'flex';
+      }
+    }
+
+    function renderContactPage() {
+      const config = getConfig();
+      const addrEl = document.getElementById('contact-address-text');
+      if (addrEl) addrEl.textContent = config.address || '';
+      const phoneEl = document.getElementById('contact-phone-text');
+      if (phoneEl) {
+        phoneEl.innerHTML = `โทรศัพท์: ${config.phone || '-'}<br>โทรสาร: ${config.fax || '-'}`;
+      }
+      const mailEl = document.getElementById('contact-email-text');
+      if (mailEl) mailEl.textContent = config.email || '';
+    }
+
+    function renderFooter() {
+      const config = getConfig();
+      // ข้อความวิ่ง
+      const tickerEl = document.getElementById('news-ticker-text');
+      if (tickerEl) tickerEl.textContent = config.ticker_text || defaultConfig.ticker_text || '';
+      // ที่อยู่
+      const addrEl = document.getElementById('footer-address');
+      if (addrEl) {
+        const addr = (config.address || defaultConfig.address || '').replace(/\n/g, '<br>');
+        addrEl.innerHTML = addr;
+      }
+      // ติดต่อ
+      const contactEl = document.getElementById('footer-contact');
+      if (contactEl) {
+        const phone = config.phone || defaultConfig.phone || '';
+        const fax   = config.fax   || defaultConfig.fax   || '';
+        const email = config.email || defaultConfig.email || '';
+        let html = '';
+        if (phone) html += 'โทรศัพท์: ' + phone + '<br>';
+        if (fax)   html += 'โทรสาร: '   + fax   + '<br>';
+        if (email) html += 'อีเมล: <span class="text-blue-600 font-semibold">' + email + '</span>';
+        contactEl.innerHTML = html;
+      }
+      // เวลาทำการ
+      const wh1 = config.working_hours_line1 || defaultConfig.working_hours_line1;
+      const wh2 = config.working_hours_line2 || defaultConfig.working_hours_line2;
+      const wh3 = config.working_hours_line3 || defaultConfig.working_hours_line3;
+      const whEl = document.getElementById('footer-working-hours');
+      if (whEl) whEl.innerHTML = wh1 + '<br>' + wh2 + (wh3 ? '<br>' + wh3 : '');
+      // copyright
+      const cpEl = document.getElementById('footer-copyright');
+      if (cpEl) cpEl.textContent = config.copyright_text || defaultConfig.copyright_text;
+      // social links
+      const fbEl = document.getElementById('footer-facebook-link');
+      if (fbEl) fbEl.href = config.facebook_url || defaultConfig.facebook_url || '#';
+      const lineEl = document.getElementById('footer-line-link');
+      if (lineEl) lineEl.href = config.line_url || defaultConfig.line_url || '#';
+      const ytEl = document.getElementById('footer-youtube-link');
+      if (ytEl) ytEl.href = config.youtube_url || defaultConfig.youtube_url || '#';
+    }
+
+    function updateBannerPreview(url) {
+      const img = document.getElementById('banner-preview-img');
+      const ph  = document.getElementById('banner-preview-placeholder');
+      if (!img) return;
+      if (url && url.trim()) {
+        img.src = url.trim();
+        img.classList.remove('hidden');
+        ph.classList.add('hidden');
+      } else {
+        img.classList.add('hidden');
+        ph.classList.remove('hidden');
+      }
+    }
+
+    function handleBannerFileUpload(input) {
+      const file = input.files[0]; if (!file) return;
+      const btn = input.closest('label') || input.parentElement;
+      const origText = btn ? btn.textContent : '';
+      if (btn) btn.textContent = '⏳ กำลังวิเคราะห์รูปภาพ...';
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const filename = 'banner_' + Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9.]/g,'_');
+        uploadToDrive(e.target.result, filename, function(url) {
+          document.getElementById('edit-banner-image').value = url;
+          updateBannerPreview(url);
+          if (btn) btn.textContent = '✅ อัปโหลดเรียบร้อย';
+        }, function() {
+          if (btn) btn.textContent = origText;
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleAdminLogin(event) {
+      event.preventDefault();
+      const password = document.getElementById('admin-password').value;
+      const correctPassword = getConfig().admin_password || '130859';
+      
+      if (password === correctPassword) {
+        showToast('🔓 เข้าสู่ระบบแอดมินเรียบร้อย ยินดีต้อนรับครับ');
+        sessionStorage.setItem('isAdmin', 'true');
+        
+        setTimeout(() => {
+          navigateTo('home-page');
+          updateUserProfile();
+          document.getElementById('admin-password').value = '';
+        }, 1200);
+      } else {
+        showToast('❌ รหัสผ่านแอดมินไม่ถูกต้อง โปรดลองอีกครั้ง', 'error');
+        document.getElementById('admin-password').value = '';
+      }
+    }
+
+    function handleAdminLogout() {
+      sessionStorage.removeItem('isAdmin');
+      updateUserProfile();
+      showToast('🔒 ออกจากระบบแอดมินเรียบร้อย');
+      navigateTo('home-page');
+    }
+
+    function handleAdminUpdate(event) {
+      event.preventDefault();
+
+      // Collect menu items
+      const menuItems = [];
+      document.querySelectorAll('[data-menu-item-id]').forEach(div => {
+        const id = div.dataset.menuItemId;
+        const labelEl = div.querySelector('[data-menu-label="' + id + '"]');
+        const urlEl   = div.querySelector('[data-menu-url="'   + id + '"]');
+        const colorEl = div.querySelector('[data-menu-color="' + id + '"]');
+        menuItems.push({
+          id,
+          label: labelEl ? labelEl.value : '',
+          url:   urlEl   ? urlEl.value   : '',
+          color: colorEl ? colorEl.value : 'from-blue-400 to-blue-600',
+        });
+      });
+
+      // Collect gallery items
+      const galleryToSave = [];
+      document.querySelectorAll('[data-gallery-id]').forEach(div => {
+        galleryToSave.push({
+          id:    div.dataset.galleryId,
+          label: (div.querySelector('[data-g-label]')||{}).value || '',
+          emoji: (div.querySelector('[data-g-emoji]')||{}).value || '📷',
+          color: (div.querySelector('[data-g-color]')||{}).value || 'from-blue-100 to-blue-200',
+          image: (div.querySelector('[data-g-image]')||{}).value || '',
+        });
+      });
+
+      // Collect quick links
+      const quickLinksToSave = [];
+      document.querySelectorAll('[data-quick-link-id]').forEach(div => {
+        const id = div.dataset.quickLinkId;
+        const type = div.querySelector('[data-ql-type]').value;
+        let targetValue = '';
+        if (type === 'internal') {
+          targetValue = div.querySelector('[data-ql-target-internal]').value;
+        } else {
+          targetValue = div.querySelector('[data-ql-target-external]').value;
+        }
+        quickLinksToSave.push({
+          id: id,
+          label: div.querySelector('[data-ql-label]').value || '',
+          icon: div.querySelector('[data-ql-icon]').value || 'link',
+          type: type,
+          target: targetValue,
+        });
+      });
+
+      // Collect news & activities (3 หมวดตายตัว)
+      const newsToSave = {};
+      ['news','activities','announcement'].forEach(catKey => {
+        const posts = [];
+        document.querySelectorAll('#posts-container-'+catKey+' [data-post-id]').forEach(div => {
+          posts.push({
+            id:    div.dataset.postId,
+            title: (div.querySelector('[data-p-title]')||{}).value || '',
+            desc:  (div.querySelector('[data-p-desc]') ||{}).value || '',
+            url:   (div.querySelector('[data-p-url]')  ||{}).value || '',
+            image: (div.querySelector('[data-p-image]')||{}).value || '',
+          });
+        });
+        newsToSave[catKey] = { posts };
+      });
+
+      const updatedConfig = {
+        school_name:    document.getElementById('edit-school-name').value,
+        school_motto:   document.getElementById('edit-school-motto').value,
+        student_count:  document.getElementById('edit-student-count').value,
+        staff_count:    document.getElementById('edit-staff-count').value,
+        banner_image:   document.getElementById('edit-banner-image').value,
+        school_icon:    document.getElementById('edit-school-icon').value,
+        icon_color1:    document.getElementById('edit-icon-color1')?.value || '#3b82f6',
+        icon_color2:    document.getElementById('edit-icon-color2')?.value || '#6366f1',
+        address:        document.getElementById('edit-address').value,
+        phone:          document.getElementById('edit-phone').value,
+        fax:            document.getElementById('edit-fax').value,
+        email:          document.getElementById('edit-email').value,
+        school_history: document.getElementById('edit-school-history').value,
+        vision:         document.getElementById('edit-vision').value,
+        mission:        document.getElementById('edit-mission').value,
+        admin_password: document.getElementById('edit-admin-password').value || '130859',
+        working_hours_line1: document.getElementById('edit-working-hours-line1').value,
+        working_hours_line2: document.getElementById('edit-working-hours-line2').value,
+        working_hours_line3: document.getElementById('edit-working-hours-line3').value,
+        facebook_url:   document.getElementById('edit-facebook-url').value,
+        line_url:       document.getElementById('edit-line-url').value,
+        youtube_url:    document.getElementById('edit-youtube-url').value,
+        copyright_text: document.getElementById('edit-copyright-text').value,
+        ticker_text:    document.getElementById('edit-ticker-text').value,
+        menu_items:     JSON.stringify(menuItems),
+        gallery_items:  JSON.stringify(galleryToSave),
+        news_activities:JSON.stringify(newsToSave),
+        quick_links:    JSON.stringify(quickLinksToSave),
+      };
+
+      saveConfig(updatedConfig);
+      
+      // อัปเดต UI ทันที
+      _configCache = updatedConfig;
+      renderAll();
+      
+      setTimeout(() => {
+        navigateTo('home-page');
+      }, 1000);
+    }
+
+    function loadAdminEditForm() {
+      const config = getConfig();
+      document.getElementById('edit-school-name').value = config.school_name || '';
+      document.getElementById('edit-school-motto').value = config.school_motto || '';
+      document.getElementById('edit-student-count').value = config.student_count || '';
+      document.getElementById('edit-staff-count').value = config.staff_count || '';
+      document.getElementById('edit-banner-image').value = config.banner_image || '';
+      updateBannerPreview(config.banner_image || '');
+      document.getElementById('edit-school-icon').value = config.school_icon || '';
+      updateIconPreview(config.school_icon || '');
+      
+      const c1 = config.icon_color1 || '#3b82f6';
+      const c2 = config.icon_color2 || '#6366f1';
+      if (document.getElementById('edit-icon-color1')) {
+        document.getElementById('edit-icon-color1').value = c1;
+        document.getElementById('edit-icon-color1-hex').value = c1;
+        document.getElementById('edit-icon-color2').value = c2;
+        document.getElementById('edit-icon-color2-hex').value = c2;
+        updateAdminIconColors();
+      }
+      
+      document.getElementById('edit-address').value = config.address || '';
+      document.getElementById('edit-phone').value = config.phone || '';
+      document.getElementById('edit-fax').value = config.fax || '';
+      document.getElementById('edit-email').value = config.email || '';
+
+      if (document.getElementById('edit-school-history')) document.getElementById('edit-school-history').value = config.school_history || '';
+      if (document.getElementById('edit-vision')) document.getElementById('edit-vision').value = config.vision || '';
+      if (document.getElementById('edit-mission')) document.getElementById('edit-mission').value = config.mission || '';
+
+      document.getElementById('edit-admin-password').value = config.admin_password || '';
+      document.getElementById('edit-working-hours-line1').value = config.working_hours_line1 || '';
+      document.getElementById('edit-working-hours-line2').value = config.working_hours_line2 || '';
+      document.getElementById('edit-working-hours-line3').value = config.working_hours_line3 || '';
+      document.getElementById('edit-facebook-url').value = config.facebook_url || '';
+      document.getElementById('edit-line-url').value = config.line_url || '';
+      document.getElementById('edit-youtube-url').value = config.youtube_url || '';
+      document.getElementById('edit-copyright-text').value = config.copyright_text || '';
+      document.getElementById('edit-ticker-text').value = config.ticker_text || defaultConfig.ticker_text || '';
+
+      // Load gallery items
+      const galleryAdminContainer = document.getElementById('gallery-admin-container');
+      if (galleryAdminContainer) {
+        galleryAdminContainer.innerHTML = '';
+        let galleryItems = [];
+        try { galleryItems = JSON.parse(config.gallery_items || '[]'); } catch(e) {}
+        if (!galleryItems.length) galleryItems = JSON.parse(defaultConfig.gallery_items);
+        galleryItems.forEach(item => renderGalleryAdminItem(item, galleryAdminContainer));
+      }
+
+      // Load quick links
+      const qlAdminContainer = document.getElementById('quick-links-admin-container');
+      if (qlAdminContainer) {
+        qlAdminContainer.innerHTML = '';
+        let quickLinks = [];
+        try { quickLinks = JSON.parse(config.quick_links || '[]'); } catch(e) {}
+        if (!quickLinks.length) {
+          try { quickLinks = JSON.parse(defaultConfig.quick_links); } catch(e) {}
+        }
+        quickLinks.forEach(item => renderQuickLinkAdminItem(item, qlAdminContainer));
+      }
+
+      // Load menu items
+      const menuContainer = document.getElementById('menu-items-container');
+      if (menuContainer) {
+        menuContainer.innerHTML = '';
+        try {
+          const items = JSON.parse(config.menu_items || '[]');
+          items.forEach(item => {
+            const div = document.createElement('div');
+            div.setAttribute('data-menu-item-id', item.id);
+            div.className = 'bg-white border-l-4 border-blue-400 p-4 rounded-xl shadow-sm';
+            div.innerHTML = buildMenuItemHTML(item.id, item);
+            menuContainer.appendChild(div);
+          });
+        } catch(e) { console.error(e); }
+      }
+
+      // Load news & activities (3 หมวดตายตัว)
+      const newsContainer = document.getElementById('news-activities-container');
+      if (newsContainer) {
+        const newsData = getNewsData();
+        newsContainer.innerHTML = Object.entries(NEWS_CATEGORIES).map(([catKey, cat]) => `
+          <div class="rounded-xl border-2 ${cat.border} overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-3 bg-gradient-to-r ${cat.color}">
+              <span class="text-white font-bold text-sm">${cat.label}</span>
+              <button type="button" onclick="addNewsPost('${catKey}')"
+                class="bg-white/25 hover:bg-white/40 text-white px-3 py-1 rounded-full text-xs font-semibold flex items-center gap-1 transition">
+                <i data-lucide="plus" class="w-3 h-3"></i> เพิ่มเนื้อหา
+              </button>
+            </div>
+            <div id="posts-container-${catKey}" class="p-3 space-y-2 ${cat.bg} min-h-12"></div>
+          </div>
+        `).join('');
+
+        Object.entries(NEWS_CATEGORIES).forEach(([catKey]) => {
+          const posts = newsData[catKey]?.posts || [];
+          const cont  = document.getElementById('posts-container-'+catKey);
+          if (cont) {
+            posts.forEach(p => renderNewsAdminPost(catKey, p, cont));
+          }
+        });
+      }
+      lucide.createIcons();
+    }
+
+    function updateUserProfile() {
+      const isAdmin = sessionStorage.getItem('isAdmin');
+      const loginButtons = document.getElementById('login-buttons');
+      const adminProfile = document.getElementById('admin-profile');
+      
+      if (isAdmin) {
+        if (loginButtons) loginButtons.classList.add('hidden');
+        if (adminProfile) adminProfile.classList.remove('hidden');
+      } else {
+        if (loginButtons) loginButtons.classList.remove('hidden');
+        if (adminProfile) adminProfile.classList.add('hidden');
+      }
+    }
+
+    function renderAll() {
+      renderMenuButtons();
+      renderNewsActivitiesSection();
+      renderGallery();
+      renderQuickLinks();
+      initBanner();
+      initSchoolIcon();
+      renderFooter();
+      
+      const config = getConfig();
+      
+      const titleEl = document.getElementById('school-title');
+      if (titleEl) titleEl.textContent = config.school_name || defaultConfig.school_name;
+      
+      const navTitleEl = document.getElementById('nav-school-name');
+      if (navTitleEl) {
+        const shortName = (config.school_name || 'กุศลวิทยา').replace('ระบบสารสนเทศ', '').trim();
+        navTitleEl.textContent = shortName;
+      }
+      
+      const mottoEl = document.getElementById('school-motto');
+      if (mottoEl) mottoEl.textContent = config.school_motto || defaultConfig.school_motto;
+      
+      const studentCountEl = document.getElementById('student-count');
+      if (studentCountEl) studentCountEl.textContent = config.student_count || defaultConfig.student_count;
+      
+      const staffCountEl = document.getElementById('staff-count');
+      if (staffCountEl) staffCountEl.textContent = config.staff_count || defaultConfig.staff_count;
+
+      const histText = document.getElementById('about-history-text');
+      if (histText) histText.textContent = config.school_history || defaultConfig.school_history;
+
+      const visionText = document.getElementById('about-vision-text');
+      if (visionText) visionText.textContent = config.vision || defaultConfig.vision;
+
+      const missionText = document.getElementById('about-mission-text');
+      if (missionText) missionText.textContent = config.mission || defaultConfig.mission;
+
+      lucide.createIcons();
+    }
+
+    // ── จุดเริ่มต้นระบบ (OnLoad) ────────────────────────────────────────────────
+    window.onload = function() {
+      initStorageEngine();
+      updateUserProfile();
+
+      if (isGoogleAppsScript) {
+        google.script.run
+          .withSuccessHandler(function(jsonStr) {
+            if (jsonStr) {
+              try { _configCache = JSON.parse(jsonStr); } catch(e) {}
+            }
+            renderAll();
+          })
+          .withFailureHandler(function() {
+            renderAll();
+          })
+          .loadConfig();
+      } else {
+        renderAll();
+      }
+    };
+  </script>
+ </body>
+</html>
