@@ -1892,18 +1892,44 @@
         // ════════════════════════════════════════════════════════
         const safeStorage = (() => {
             let _mem = {};
+            // ทดสอบแบบ read-back เพื่อจับกรณี Edge Tracking Prevention
+            // ที่ setItem ไม่ throw แต่ข้อมูลไม่ถูกเก็จริง
             const _ls = (() => {
-                try { localStorage.setItem('__test__', '1'); localStorage.removeItem('__test__'); return localStorage; }
-                catch(e) { return null; }
+                try {
+                    const KEY = '__ls_test__';
+                    localStorage.setItem(KEY, 'ok');
+                    const ok = localStorage.getItem(KEY) === 'ok';
+                    localStorage.removeItem(KEY);
+                    return ok ? localStorage : null;
+                } catch(e) { return null; }
             })();
+            if (!_ls) {
+                console.warn('⚠️ localStorage ไม่พร้อมใช้งาน (Edge Tracking Prevention?) — ใช้ in-memory แทน ข้อมูลจะหายเมื่อรีเฟรชหน้า');
+            }
             return {
                 get(k)    { try { if (_ls) return _ls.getItem(k); } catch(e) {} return _mem[k] ?? null; },
                 set(k, v) { try { if (_ls) { _ls.setItem(k, v); return; } } catch(e) {} _mem[k] = v; },
                 remove(k) { try { if (_ls) { _ls.removeItem(k); return; } } catch(e) {} delete _mem[k]; },
                 parse(k, fallback) { try { const v = this.get(k); return v ? JSON.parse(v) : fallback; } catch(e) { return fallback; } },
-                stringify(k, v) { this.set(k, JSON.stringify(v)); }
+                stringify(k, v) { this.set(k, JSON.stringify(v)); },
+                isLocal() { return !!_ls; }
             };
         })();
+
+        // ─── Storage Warning Banner ───
+        window.addEventListener('DOMContentLoaded', () => {
+            if (!safeStorage.isLocal()) {
+                const banner = document.createElement('div');
+                banner.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;background:#b45309;color:#fff;text-align:center;padding:10px 16px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:10px;';
+                banner.innerHTML = `
+                    <span>⚠️ <b>เบราว์เซอร์บล็อก localStorage</b> — ข้อมูลจะไม่ถูกบันทึกหลังรีเฟรช</span>
+                    <span style="opacity:.7">|</span>
+                    <span>วิธีแก้: เปิด Edge → Settings → Privacy → Tracking Prevention → เลือก <b>Basic</b> หรือ <b>Balanced</b></span>
+                    <button onclick="this.parentElement.remove()" style="margin-left:8px;background:rgba(255,255,255,.2);border:none;color:#fff;padding:2px 10px;border-radius:6px;cursor:pointer;">✕</button>
+                `;
+                document.body.prepend(banner);
+            }
+        });
 
         // ─── showToast (must be defined early) ───
         function showToast(msg, type = 'success') {
@@ -1929,7 +1955,7 @@
         //  GAS CONFIG — ใส่ URL ของ Web App ที่ deploy แล้ว
         // ====================
         // GAS_URL — load from safeStorage so user can set it from UI
-        let GAS_URL = safeStorage.get('gas_url') || 'https://script.google.com/macros/s/AKfycbxwH5YiKnwPzN3VqpeJr9_1IxQhQ-K1iqBT_NG0W1C8dG8cS8pkNv1IQ4EFBfe3F2_g/exec';
+        let GAS_URL = safeStorage.get('gas_url') || 'https://script.google.com/macros/s/AKfycbyD5vGuUBKa1W18kmTegl4Yy_A8jDfRANnGTbY20-Mqyv6oh2_q8i3GqXqevsAJjNroEA/exec';
 
         // ==================== API Helper ════════════════════════════════════════
         async function gasCall(action, body = {}) {
